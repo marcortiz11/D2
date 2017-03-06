@@ -29,6 +29,8 @@ private:
 	Sprite *sprite;
 	TileMap *map;
 
+	glm::ivec2 colisionBox;
+
 };
 
 
