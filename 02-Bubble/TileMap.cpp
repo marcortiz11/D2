@@ -63,7 +63,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> mapSize.x >> mapSize.y;
 	getline(ifs, line);
 	sstream.str(line);
-	sstream >> tileSize >> blockSize;
+	sstream >> tileS.x >> tileS.y >> blockS.x >> blockS.y;
 	getline(ifs, line);
 	sstream.str(line);
 	sstream >> tilesheetFile;
@@ -119,26 +119,26 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				nTiles++;
 
 				//posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				posTile = glm::vec2(i * tileSize, j * tileSize);
+				posTile = glm::vec2(i * blockS.y, j * blockS.x);
 				float cx = (tile-1) / tilesheetSize.x; //+1
 				float cy = (tile-1) % tilesheetSize.x; //-1
-				texCoordTile[0] = glm::vec2(cy / tilesheetSize.y, cx / tilesheetSize.x);
+				texCoordTile[0] = glm::vec2(cy / 80.0f, cx / 12.0f);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
 				// First triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y);
+				vertices.push_back(posTile.x + blockS.y); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
+				vertices.push_back(posTile.x + blockS.y); vertices.push_back(posTile.y + blockS.x);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
 				// Second triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
+				vertices.push_back(posTile.x + blockS.y); vertices.push_back(posTile.y + blockS.x);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockSize);
+				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockS.x);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
 			}
 		}
