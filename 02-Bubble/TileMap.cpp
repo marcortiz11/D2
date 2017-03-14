@@ -119,26 +119,26 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				nTiles++;
 
 				//posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				posTile = glm::vec2(i * blockS.y, j * blockS.x);
+				posTile = glm::vec2(i * blockS.x, j * blockS.y * 0.5f);
 				float cx = (tile-1) / tilesheetSize.x; //+1
 				float cy = (tile-1) % tilesheetSize.x; //-1
-				texCoordTile[0] = glm::vec2(cy / 80.0f, cx / 12.0f);
+				texCoordTile[0] = glm::vec2(cy / 130.0f, cx / 12.0f);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
 				// First triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockS.y); vertices.push_back(posTile.y);
+				vertices.push_back(posTile.x + 32.f); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockS.y); vertices.push_back(posTile.y + blockS.x);
+				vertices.push_back(posTile.x + 32.f); vertices.push_back(posTile.y + 63.f);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
 				// Second triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockS.y); vertices.push_back(posTile.y + blockS.x);
+				vertices.push_back(posTile.x + 32.f); vertices.push_back(posTile.y + 63.f);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockS.x);
+				vertices.push_back(posTile.x); vertices.push_back(posTile.y + 63.f);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
 			}
 		}

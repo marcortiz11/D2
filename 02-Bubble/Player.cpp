@@ -20,7 +20,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
-	spritesheet.loadFromFile("images/lento.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile("images/PrinceOfPersia_Sprites.gif", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(44, 44), glm::vec2(1.0/12.0, 1.0/2.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(4);
 
