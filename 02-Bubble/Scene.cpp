@@ -38,7 +38,7 @@ void Scene::init()
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
-	player->setPhysicsTileMap(map);
+	player->setPhysicsTileMap(physicsMap);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -60,6 +60,7 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
+	//physicsMap->render();
 	player->render();
 }
 
