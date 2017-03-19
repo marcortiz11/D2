@@ -67,7 +67,11 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(200), float(tileMapDispl.y + posPlayer.y)));
+
+	// Este set position, no.
+
+	posPlayer = glm::vec2(400, 140);
+	sprite->setPosition(posPlayer);
 
 
 	colisionBox = glm::ivec2(44, 44);
@@ -80,7 +84,9 @@ void Player::update(int deltaTime)
 	{
 		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
+
 		posPlayer.x -= 1;
+
 		if (physicsMap->collisionMoveLeft(posPlayer, colisionBox))
 		{
 			posPlayer.x += 2;
@@ -136,7 +142,7 @@ void Player::update(int deltaTime)
 	}
 
 	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	sprite->setPosition(glm::vec2(float(200), float(200)));
+	//sprite->setPosition(glm::vec2(float(400), float(140)));
 }
 
 void Player::render()
