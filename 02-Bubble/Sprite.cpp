@@ -48,6 +48,10 @@ void Sprite::update(int deltaTime)
 	}
 }
 
+int Sprite::getCurrentKeyframe() {
+	return currentKeyframe;
+}
+
 void Sprite::render() const
 {
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.f));
@@ -75,8 +79,12 @@ void Sprite::setNumberAnimations(int nAnimations)
 
 void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
 {
-	if(animId < int(animations.size()))
+	if (animId < int(animations.size())) {
 		animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
+	}
+	else {
+		throw std::runtime_error("animId > animations.size()");
+	}
 }
 
 void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)

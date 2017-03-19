@@ -33,6 +33,7 @@ public:
 	int animation() const;
 	
 	void setPosition(const glm::vec2 &pos);
+	int getCurrentKeyframe();
 
 private:
 	Texture *texture;

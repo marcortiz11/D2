@@ -81,8 +81,7 @@ static void idleCallback()
 }
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
 	// GLUT initialization
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
