@@ -28,6 +28,7 @@ private:
 
 private:
 	TileMap *map;
+	TileMap *physicsMap;
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
