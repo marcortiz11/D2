@@ -74,7 +74,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setPosition(posPlayer);
 
 
-	colisionBox = glm::ivec2(44, 44);
+	colisionBox = glm::ivec2(12, 44);
 }
 
 void Player::update(int deltaTime)
@@ -89,7 +89,7 @@ void Player::update(int deltaTime)
 
 		if (physicsMap->collisionMoveLeft(posPlayer, colisionBox))
 		{
-			posPlayer.x += 2;
+			posPlayer.x += 1;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -97,10 +97,10 @@ void Player::update(int deltaTime)
 	{
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
+		posPlayer.x += 1;
 		if (physicsMap->collisionMoveRight(posPlayer, colisionBox))
 		{
-			posPlayer.x -= 2;
+			posPlayer.x -= 1;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
@@ -124,14 +124,15 @@ void Player::update(int deltaTime)
 		{
 			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
 			if (jumpAngle > 90)
-				bJumping = !physicsMap->collisionMoveDown(posPlayer, colisionBox, &posPlayer.y);
+				bJumping = !physicsMap->collisionMoveDown(posPlayer, colisionBox);
 		}
 	}
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if (physicsMap->collisionMoveDown(posPlayer, colisionBox, &posPlayer.y))
+		if (physicsMap->collisionMoveDown(posPlayer, colisionBox))
 		{
+			posPlayer.y -= FALL_STEP;
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
 				bJumping = true;
