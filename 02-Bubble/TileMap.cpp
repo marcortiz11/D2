@@ -122,7 +122,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				posTile = glm::vec2(i * blockSize.x, j * blockSize.y);
 				float cx = (tile-1) / tilesheetSize.x; //+1
 				float cy = (tile-1) % tilesheetSize.x; //-1
-				texCoordTile[0] = glm::vec2(cy / 130.0f, cx / 12.0f);
+				texCoordTile[0] = glm::vec2(cy / float(tilesheetSize.x), cx / float(tilesheetSize.y));
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
