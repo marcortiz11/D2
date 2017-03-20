@@ -20,7 +20,7 @@ public:
 	
 	void setPhysicsTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-	
+	glm::vec2 getPosition();
 private:
 	bool bJumping, bMoving;
 	glm::ivec2 tileMapDispl;

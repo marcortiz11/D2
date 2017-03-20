@@ -6,9 +6,9 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 4
+#define JUMP_ANGLE_STEP 6
 #define JUMP_HEIGHT 96
-#define FALL_STEP 4
+#define FALL_STEP 7
 
 
 enum PlayerAnims
@@ -21,16 +21,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.setMinFilter(GL_NEAREST);
+	spritesheet.setMagFilter(GL_NEAREST);
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 10.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(5);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1*heightAnim));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0*heightAnim));
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0 * heightAnim));
 
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
@@ -81,6 +83,12 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bMoving = false;
 }
 
+glm::vec2 Player::getPosition()
+{
+	return posPlayer;
+}
+
+
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
@@ -90,7 +98,7 @@ void Player::update(int deltaTime)
 		bMoving = true;
 		sprite->changeAnimation(MOVE_LEFT);
 		targetPosPlayer = posPlayer + glm::vec2(-64.0f, 0.0f);
-		
+
 	}
 
 	if (!bMoving && !bJumping && Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
@@ -128,24 +136,32 @@ void Player::update(int deltaTime)
 	}
 
 	else if (bJumping)
-	{	
-		jumpAngle += JUMP_ANGLE_STEP;
+	{
+		if (sprite->getCurrentKeyframe() > 5) {
+			jumpAngle += JUMP_ANGLE_STEP;
+		}
 		if (jumpAngle == 180)
 		{
 			bJumping = false;
 			posPlayer.y = startY;
+			if (direction.x >= 0) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(STAND_LEFT);
+			}
 		}
 		else
 		{
 			if (sprite->getCurrentKeyframe() > 5) {
-				posPlayer.y = int(startY - 20 * sin(3.14159f * jumpAngle / 180.f));
+				posPlayer.y = int(startY - 10 * sin(3.14159f * jumpAngle / 180.f));
 				if (jumpAngle > 90)
 					bJumping = !physicsMap->collisionMoveDown(posPlayer, colisionBox);
 			}
 		}
 	}
 	else
-	{	
+	{
 		posPlayer.y += FALL_STEP;
 		if (physicsMap->collisionMoveDown(posPlayer, colisionBox))
 		{
