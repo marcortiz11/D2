@@ -22,7 +22,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 
-	enum class Estado { Walking, Jumping, Falling, Stopped };
+	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped };
 
 private:
 	bool bJumping, bMoving;
