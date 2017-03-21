@@ -19,7 +19,7 @@ enum PlayerAnims
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-	bJumping = false;
+	estado = Estado::Falling;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
@@ -93,56 +93,33 @@ void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 
-	if (!bMoving && !bJumping && Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-	{
-		bMoving = true;
-		sprite->changeAnimation(MOVE_LEFT);
-		targetPosPlayer = posPlayer + glm::vec2(-64.0f, 0.0f);
-
-	}
-
-	if (!bMoving && !bJumping && Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-	{
-		bMoving = true;
-		sprite->changeAnimation(MOVE_RIGHT);
-		targetPosPlayer = posPlayer + glm::vec2(64.0f, 0.0f);
-
-	}
-
-	if (!bMoving && !bJumping && Game::instance().getSpecialKey(GLUT_KEY_UP))
-	{
-		bJumping = true;
-		sprite->changeAnimation(JUMP_RIGHT);
-		jumpAngle = 0;
-		startY = posPlayer.y;
-	}
-
-
-	if (bMoving) {
-		glm::vec2 direction = glm::normalize(targetPosPlayer - posPlayer);
-
-		posPlayer += direction;
-
-		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
-			posPlayer = targetPosPlayer;
-			bMoving = false;
-			if (direction.x > 0) {
-				sprite->changeAnimation(STAND_RIGHT);
-			}
-			else {
-				sprite->changeAnimation(STAND_LEFT);
-			}
+	switch (estado) {
+	case Estado::Stopped:
+		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
+			estado = Estado::Walking;
+			sprite->changeAnimation(MOVE_LEFT);
+			targetPosPlayer = posPlayer + glm::vec2(-64.0f, 0.0f);
 		}
-	}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
+			estado = Estado::Walking;
+			sprite->changeAnimation(MOVE_RIGHT);
+			targetPosPlayer = posPlayer + glm::vec2(64.0f, 0.0f);
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+			estado = Estado::Jumping;
+			sprite->changeAnimation(JUMP_RIGHT);
+			jumpAngle = 0;
+			startY = posPlayer.y;
+		}
+		break;
 
-	else if (bJumping)
-	{
+	case Estado::Jumping:
 		if (sprite->getCurrentKeyframe() > 5) {
 			jumpAngle += JUMP_ANGLE_STEP;
 		}
 		if (jumpAngle == 180)
 		{
-			bJumping = false;
+			estado = Estado::Falling;
 			posPlayer.y = startY;
 			if (direction.x >= 0) {
 				sprite->changeAnimation(STAND_RIGHT);
@@ -159,16 +136,33 @@ void Player::update(int deltaTime)
 					bJumping = !physicsMap->collisionMoveDown(posPlayer, colisionBox);
 			}
 		}
-	}
-	else
-	{
+		break;
+
+	case Estado::Falling:
 		posPlayer.y += FALL_STEP;
 		if (physicsMap->collisionMoveDown(posPlayer, colisionBox))
 		{
 			posPlayer.y -= FALL_STEP;
+			estado = Estado::Stopped;
+		}
+		break;
+
+	case Estado::Walking:
+		glm::vec2 direction = glm::normalize(targetPosPlayer - posPlayer);
+
+		posPlayer += direction;
+
+		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
+			posPlayer = targetPosPlayer;
+			estado = Estado::Falling;
+			if (direction.x > 0) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(STAND_LEFT);
+			}
 		}
 	}
-
 	setPosition(posPlayer);
 }
 
