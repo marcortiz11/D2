@@ -60,7 +60,10 @@ int Sprite::getCurrentKeyframe() {
 
 void Sprite::render() const
 {
-	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.f));
+	glm::mat4 modelview = glm::mat4(1.0f);
+	modelview = glm::translate(modelview, glm::vec3(position.x, position.y, 0.f));
+
+	
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
 	glEnable(GL_TEXTURE_2D);
@@ -120,5 +123,11 @@ void Sprite::setPosition(const glm::vec2 &pos)
 	position = pos;
 }
 
+void Sprite::setFlipY(bool b) {
+	bFlipY = b;
+}
 
+bool Sprite::flipY() {
+	return bFlipY;
+}
 

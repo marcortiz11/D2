@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT
 };
 
 
@@ -24,9 +24,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	double widthAnim = 1.0 / 16.0;
-	double heightAnim = 1.0 / 10.0;
+	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(5);
+	sprite->setNumberAnimations(8);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -72,6 +72,41 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(9 * widthAnim, 4 * heightAnim));
 	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(10 * widthAnim, 4 * heightAnim));
 	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(11 * widthAnim, 4 * heightAnim));
+
+	sprite->setAnimationSpeed(JUMP_LEFT, 12);
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(1 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(2 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(3 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(4 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(5 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(6 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(7 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(8 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(9 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(10 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(11 * widthAnim, 5 * heightAnim));
+
+	sprite->setAnimationSpeed(SLOW_RIGHT, 8);
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(0 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(1 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(2 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(3 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(4 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(5 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(6 * widthAnim, 6 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(7 * widthAnim, 6 * heightAnim));
+
+	sprite->setAnimationSpeed(SLOW_LEFT, 8);
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(0 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(1 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(2 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(3 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(4 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(5 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(6 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(7 * widthAnim, 7 * heightAnim));
+	
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -134,7 +169,12 @@ void Player::update(int deltaTime)
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 			estado = Estado::Jumping;
-			sprite->changeAnimation(JUMP_RIGHT);
+			if (direction.x >= 0) {
+				sprite->changeAnimation(JUMP_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(JUMP_LEFT);
+			}
 			jumpAngle = 0;
 			startY = posPlayer.y;
 		}
