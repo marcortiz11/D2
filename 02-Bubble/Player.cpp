@@ -4,7 +4,7 @@
 #include <GL/glut.h>
 #include "Player.h"
 #include "Game.h"
-
+#include "GL/glut.h"
 
 #define JUMP_ANGLE_STEP 6
 #define JUMP_HEIGHT 96
@@ -26,7 +26,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(8);
+	sprite->setNumberAnimations(9);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -97,15 +97,15 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(6 * widthAnim, 6 * heightAnim));
 	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(7 * widthAnim, 6 * heightAnim));
 
-	sprite->setAnimationSpeed(SLOW_LEFT, 8);
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(0 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(1 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(2 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(3 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(4 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(5 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(6 * widthAnim, 7 * heightAnim));
-	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(7 * widthAnim, 7 * heightAnim));
+	sprite->setAnimationSpeed(SLOW_LEFT, 6);
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(0 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(1 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(2 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(3 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(4 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(5 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(6 * widthAnim, 7 * heightAnim));
+	sprite->addKeyframe(SLOW_LEFT, glm::vec2(7 * widthAnim, 7 * heightAnim));
 	
 
 	sprite->changeAnimation(0);
@@ -130,18 +130,26 @@ void Player::update(int deltaTime)
 	switch (estado) {
 	case Estado::Stopped:
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-			estado = Estado::FastWalking;
-			int animation = sprite->animation();
-			sprite->changeAnimation(MOVE_LEFT);
 			
+			int animation = sprite->animation();
+
 			glm::vec2 farPosition = posPlayer + glm::vec2(-64.0f, 0.0f);
 			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
 			
 			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
 				targetPosPlayer = closePosition;
-				if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
-					targetPosPlayer = farPosition;
+				if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
+					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
+						targetPosPlayer = farPosition;
+						estado = Estado::FastWalking;
+						sprite->changeAnimation(MOVE_LEFT);
+					}
 				}
+				else {
+					estado = Estado::SlowWalking;
+					sprite->changeAnimation(SLOW_LEFT);
+				}
+				
 			}
 			else {
 				estado = Estado::Stopped;
@@ -149,18 +157,25 @@ void Player::update(int deltaTime)
 			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-			estado = Estado::FastWalking;
 			int animation = sprite->animation();
-			sprite->changeAnimation(MOVE_RIGHT);
 
-			glm::vec2 farPosition = posPlayer + glm::vec2(64.0f, 0.0f);
-			glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
+			glm::vec2 farPosition = posPlayer + glm::vec2(-64.0f, 0.0f);
+			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
 
-			if (!physicsMap->collisionMoveRight(closePosition, colisionBox)) {
+			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
 				targetPosPlayer = closePosition;
-				if (!physicsMap->collisionMoveRight(farPosition, colisionBox)) {
-					targetPosPlayer = farPosition;
+				if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
+					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
+						targetPosPlayer = farPosition;
+						estado = Estado::FastWalking;
+						sprite->changeAnimation(MOVE_RIGHT);
+					}
 				}
+				else {
+					estado = Estado::SlowWalking;
+					sprite->changeAnimation(SLOW_RIGHT);
+				}
+
 			}
 			else {
 				estado = Estado::Stopped;
@@ -215,7 +230,7 @@ void Player::update(int deltaTime)
 		break;
 
 	case Estado::FastWalking:
-		glm::vec2 direction = glm::normalize(targetPosPlayer - posPlayer);
+		direction = glm::normalize(targetPosPlayer - posPlayer);
 
 		posPlayer += direction;
 
@@ -229,6 +244,24 @@ void Player::update(int deltaTime)
 				sprite->changeAnimation(STAND_LEFT);
 			}
 		}
+		break;
+
+	case Estado::SlowWalking:
+		direction = glm::normalize(targetPosPlayer - posPlayer);
+
+		posPlayer += direction*0.4f;
+
+		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
+			posPlayer = targetPosPlayer;
+			estado = Estado::Falling;
+			if (direction.x > 0) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(STAND_LEFT);
+			}
+		}
+		break;
 	}
 	setPosition(posPlayer);
 }
