@@ -121,9 +121,9 @@ void Player::update(int deltaTime)
 			glm::vec2 farPosition = posPlayer + glm::vec2(64.0f, 0.0f);
 			glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
 
-			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+			if (!physicsMap->collisionMoveRight(closePosition, colisionBox)) {
 				targetPosPlayer = closePosition;
-				if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
+				if (!physicsMap->collisionMoveRight(farPosition, colisionBox)) {
 					targetPosPlayer = farPosition;
 				}
 			}

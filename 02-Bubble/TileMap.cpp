@@ -76,13 +76,25 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
+
+	int offset;
+	getline(ifs, line);
+	sstream.str(line);
+	sstream >> offset;
 	
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
 		{
-			ifs >> map[j*mapSize.x+i];
+			int idTile;
+			ifs >> idTile;
+			if (idTile != 0) {
+				map[j*mapSize.x + i] = idTile - offset;
+			}
+			else {
+				map[j*mapSize.x + i] = 0;
+			}
 		}
 		ifs.get(tile);
 #ifndef _WIN32
@@ -159,8 +171,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = (pos.y + size.y - 1) / tileSize.y;
 	for(int y=y0; y<=y1; y++)
 	{
-		int v = map[y*mapSize.x + x];
-		if(v != 0)
+		if(map[y*mapSize.x + x] == 1)
 			return true;
 	}
 	
@@ -176,7 +187,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	y1 = (pos.y + size.y - 1) / tileSize.y;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		if(map[y*mapSize.x+x] == 1)
 			return true;
 	}
 	
