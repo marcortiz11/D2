@@ -87,7 +87,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(JUMP_LEFT, glm::vec2(10 * widthAnim, 5 * heightAnim));
 	sprite->addKeyframe(JUMP_LEFT, glm::vec2(11 * widthAnim, 5 * heightAnim));
 
-	sprite->setAnimationSpeed(SLOW_RIGHT, 8);
+	sprite->setAnimationSpeed(SLOW_RIGHT, 6);
 	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(0 * widthAnim, 6 * heightAnim));
 	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(1 * widthAnim, 6 * heightAnim));
 	sprite->addKeyframe(SLOW_RIGHT, glm::vec2(2 * widthAnim, 6 * heightAnim));
@@ -159,8 +159,8 @@ void Player::update(int deltaTime)
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 			int animation = sprite->animation();
 
-			glm::vec2 farPosition = posPlayer + glm::vec2(-64.0f, 0.0f);
-			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
+			glm::vec2 farPosition = posPlayer + glm::vec2(64.0f, 0.0f);
+			glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
 
 			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
 				targetPosPlayer = closePosition;
@@ -183,6 +183,11 @@ void Player::update(int deltaTime)
 			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+			// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
+			glm::vec2 upPosition = posPlayer + glm::vec2(0.0f, 32.0f);
+			//if (physicsMap->collisionMoveUp(upPosition, colisionBox)) {
+
+			//}
 			estado = Estado::Jumping;
 			if (direction.x >= 0) {
 				sprite->changeAnimation(JUMP_RIGHT);

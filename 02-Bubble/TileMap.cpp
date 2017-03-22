@@ -216,6 +216,23 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &box) co
 }
 
 
+glm::vec2 TileMap::getTilePos(const glm::vec2& pixelPos) {
+	glm::vec2 result;
+
+	result.x = pixelPos.x / tileSize.x;
+	result.y = pixelPos.y / tileSize.y;
+
+	return result;
+}
+
+glm::vec2 TileMap::getPixelPos(const glm::vec2& tilePos) {
+	glm::vec2 result;
+	
+	result.x = tilePos.x * tileSize.x;
+	result.y = tilePos.y * tileSize.y;
+
+	return result;
+}
 
 
 
