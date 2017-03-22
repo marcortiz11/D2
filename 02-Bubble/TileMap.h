@@ -33,8 +33,10 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &box) const;
 	
-	glm::vec2 getTilePos(const glm::vec2& pixelPos);
+	glm::ivec2 getTilePos(const glm::vec2& pixelPos);
 	glm::vec2 getPixelPos(const glm::vec2& tilePos);
+
+	int getIdTile(glm::ivec2 pos);
 
 private:
 	bool loadLevel(const string &levelFile);

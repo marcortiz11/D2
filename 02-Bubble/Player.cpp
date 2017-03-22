@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT, CLIMBING
 };
 
 
@@ -130,12 +130,12 @@ void Player::update(int deltaTime)
 	switch (estado) {
 	case Estado::Stopped:
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-			
+
 			int animation = sprite->animation();
 
 			glm::vec2 farPosition = posPlayer + glm::vec2(-64.0f, 0.0f);
 			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
-			
+
 			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
 				targetPosPlayer = closePosition;
 				if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
@@ -149,7 +149,7 @@ void Player::update(int deltaTime)
 					estado = Estado::SlowWalking;
 					sprite->changeAnimation(SLOW_LEFT);
 				}
-				
+
 			}
 			else {
 				estado = Estado::Stopped;
@@ -184,22 +184,43 @@ void Player::update(int deltaTime)
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 			// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
-			glm::vec2 upPosition = posPlayer + glm::vec2(0.0f, 32.0f);
-			//if (physicsMap->collisionMoveUp(upPosition, colisionBox)) {
-
-			//}
-			estado = Estado::Jumping;
-			if (direction.x >= 0) {
-				sprite->changeAnimation(JUMP_RIGHT);
+			glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
+			if (physicsMap->getIdTile(tilePos) == 3) {
+				tilePos.x += 1;
+				targetPosPlayer = physicsMap->getPixelPos(tilePos);
+				estado = Estado::Climbing;
+				//sprite->changeAnimation(CLIMBING);
 			}
 			else {
-				sprite->changeAnimation(JUMP_LEFT);
+				estado = Estado::Jumping;
+				if (direction.x >= 0) {
+					sprite->changeAnimation(JUMP_RIGHT);
+				}
+				else {
+					sprite->changeAnimation(JUMP_LEFT);
+				}
+				jumpAngle = 0;
+				startY = posPlayer.y;
 			}
-			jumpAngle = 0;
-			startY = posPlayer.y;
 		}
 		break;
 
+	case Estado::Climbing:
+		direction = glm::normalize(targetPosPlayer - posPlayer);
+
+		posPlayer += direction*0.4f;
+
+		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
+			posPlayer = targetPosPlayer;
+			estado = Estado::Falling;
+			if (direction.x > 0) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(STAND_LEFT);
+			}
+		}
+			break;
 	case Estado::Jumping:
 		if (sprite->getCurrentKeyframe() > 5) {
 			jumpAngle += JUMP_ANGLE_STEP;
@@ -267,8 +288,9 @@ void Player::update(int deltaTime)
 			}
 		}
 		break;
-	}
-	setPosition(posPlayer);
+		}
+
+		setPosition(posPlayer);
 }
 
 void Player::render()
