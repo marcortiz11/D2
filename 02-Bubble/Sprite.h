@@ -35,6 +35,9 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	int getCurrentKeyframe();
 
+	void setFlipY(bool b);
+	bool flipY();
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
@@ -47,6 +50,7 @@ private:
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
 
+	bool bFlipY = false;
 };
 
 

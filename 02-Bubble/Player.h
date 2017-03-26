@@ -20,7 +20,10 @@ public:
 	
 	void setPhysicsTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-	
+	glm::vec2 getPosition();
+
+	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing };
+
 private:
 	bool bJumping, bMoving;
 	glm::ivec2 tileMapDispl;
@@ -32,6 +35,8 @@ private:
 
 	glm::ivec2 colisionBox;
 	glm::ivec2 drawAdjustment;
+
+	Estado estado;
 
 };
 
