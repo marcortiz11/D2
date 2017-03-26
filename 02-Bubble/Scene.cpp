@@ -33,9 +33,9 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	physicsMap = TileMap::createTileMap("levels/level02.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	frontMap = TileMap::createTileMap("levels/front02.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level04.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	physicsMap = TileMap::createTileMap("levels/level04.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	frontMap = TileMap::createTileMap("levels/front04.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
