@@ -157,7 +157,8 @@ void Player::update(int deltaTime)
 					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
 						targetPosPlayer = farPosition;
 						estado = Estado::FastWalking;
-						sprite->changeAnimation(MOVE_LEFT);
+						sprite->changeAnimation(MOVE_RIGHT);
+						sprite->setFlipY(true);
 					}
 				}
 				else {
@@ -184,6 +185,7 @@ void Player::update(int deltaTime)
 						targetPosPlayer = farPosition;
 						estado = Estado::FastWalking;
 						sprite->changeAnimation(MOVE_RIGHT);
+						sprite->setFlipY(false);
 					}
 				}
 				else {
