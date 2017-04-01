@@ -83,6 +83,7 @@ void Scene::render()
 
 	player->render();
 
+	texProgram.setUniform1f("invertir", 0.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	frontMap->render();

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="8" tilewidth="32" tileheight="63" nextobjectid="1">
  <tileset firstgid="1" name="MapTiles" tilewidth="32" tileheight="63" tilecount="1560" columns="130">
-  <image source="../../../../Documents/VJ/D2/02-Bubble/images/mapa.png" trans="ffffff" width="4160" height="756"/>
+  <image source="mapa.png" trans="ffffff" width="4160" height="756"/>
  </tileset>
  <tileset firstgid="1561" name="Physics tyles" tilewidth="32" tileheight="63" tilecount="8" columns="8">
-  <image source="../../../../Documents/VJ/D2/02-Bubble/images/physicsTiles.png" trans="ffffff" width="256" height="64"/>
+  <image source="physicsTiles.png" trans="ffffff" width="256" height="64"/>
  </tileset>
  <tileset firstgid="1569" name="FrontTiles_2" tilewidth="32" tileheight="63" tilecount="8" columns="8">
   <image source="Front/FrontTiles_2.png" trans="ffffff" width="256" height="63"/>
@@ -30,8 +30,8 @@
  <layer name="Physics" width="40" height="8" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,1565,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1564,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,0,0,0,0,0,0,0,1565,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,1562,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
