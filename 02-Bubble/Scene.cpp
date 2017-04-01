@@ -27,6 +27,9 @@ Scene::~Scene()
 		delete player;
 	if (frontMap != NULL)
 		delete frontMap;
+	for (int i = 0; i < torches.size(); ++i) {
+		delete torches[i];
+	}
 }
 
 
@@ -36,7 +39,9 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/level05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	physicsMap = TileMap::createTileMap("levels/level05.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
+	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
+	initTorches(torchMap);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	float mapTileSizeX = map->getTileSizeX();
@@ -51,6 +56,7 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
 }
 
 void Scene::render()
@@ -73,12 +79,34 @@ void Scene::render()
 	map->render();
 	texProgram.setUniform1f("invertir", 0.0f);
 
+	for (int i = 0; i < torches.size(); ++i) torches[i]->render();
 
 	player->render();
 
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	frontMap->render();
+}
+
+void Scene::initTorches(TileMap* torcheMap) {
+
+	int* map = torcheMap->getTileMap();
+	int rows = torcheMap->getMapSizeY();
+	int cols = torcheMap->getMapSizeX();
+
+	int tileSizeX = torcheMap->getTileSizeX();
+	int tileSizeY = torcheMap->getTileSizeY();
+
+	for (int j = 0; j < rows; ++j) {
+		for (int i = 0; i < cols; ++i) {
+			if (map[j*cols + i] == 1) {
+				const glm::ivec2 Coords = glm::ivec2(i*tileSizeX, j*tileSizeY);
+				Torch* torch = new Torch();
+				torch->init(Coords, texProgram);
+				torches.push_back(torch);
+			}
+		}
+	}
 }
 
 void Scene::initShaders()

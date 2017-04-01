@@ -38,6 +38,11 @@ public:
 
 	int getIdTile(glm::ivec2 pos);
 
+	int* getTileMap() { return map; };
+
+	int getMapSizeX() { return mapSize.x; };
+	int getMapSizeY() { return mapSize.y; };
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
