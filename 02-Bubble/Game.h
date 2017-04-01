@@ -7,7 +7,7 @@
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 614
-#define CAMERA_HEIGHT 192
+#define CAMERA_HEIGHT 189
 #define CAMERA_WIDTH 320
 
 
