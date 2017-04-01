@@ -95,7 +95,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	frontMap->render();
 
-	text.render("Videogames!!!", glm::vec2(cx, cy), 32, glm::vec4(1, 1, 1, 1));
+	text.render("Videogames!!!", glm::vec2(10, 20), 20, glm::vec4(1, 1, 1, 1));
 }
 
 void Scene::initTorches(TileMap* torcheMap) {

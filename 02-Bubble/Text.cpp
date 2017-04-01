@@ -147,12 +147,14 @@ void Text::initShaders()
 	vShader.initFromFile(VERTEX_SHADER, "shaders/text.vert");
 	if(!vShader.isCompiled())
 	{
+		throw std::runtime_error("Vertex Shader error");
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/text.frag");
 	if(!fShader.isCompiled())
 	{
+		throw std::runtime_error("Fragment Shader error");
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
 	}
