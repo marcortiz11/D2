@@ -45,6 +45,12 @@ void Scene::init()
 	player->setPhysicsTileMap(physicsMap);
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
+
+	// Select which font you want to use
+	if (!text.init("fonts/OpenSans-Regular.ttf"))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
 } 
 
 void Scene::update(int deltaTime)
@@ -60,6 +66,7 @@ void Scene::render()
 	float cx = int(player->getPosition().x / CAMERA_WIDTH) * CAMERA_WIDTH;
 	float cy = int(player->getPosition().y / CAMERA_HEIGHT) * CAMERA_HEIGHT;
 	projection = glm::ortho(cx, float(CAMERA_WIDTH - 1 + cx), float(CAMERA_HEIGHT - 1 + cy), cy);
+	//projection = glm::ortho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
@@ -80,6 +87,8 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	frontMap->render();
+
+	text.render("Videogames!!!", glm::vec2(cx, cy), 32, glm::vec4(1, 1, 1, 1));
 }
 
 void Scene::initShaders()
