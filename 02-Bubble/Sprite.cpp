@@ -66,6 +66,12 @@ void Sprite::render() const
 	
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
+	if (bFlipY) {
+		shaderProgram->setUniform1f("invertir", 1.0f);
+	}
+	else {
+		shaderProgram->setUniform1f("invertir", 0.0f);
+	}
 	glEnable(GL_TEXTURE_2D);
 	texture->use();
 	glBindVertexArray(vao);

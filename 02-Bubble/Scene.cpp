@@ -63,10 +63,14 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	
+	texProgram.setUniform1f("invertir", 0.0f);
 	map ->render();
+	texProgram.setUniform1f("invertir", 0.0f);
 	player->render();
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	texProgram.setUniform1f("invertir", 0.0f);
 	frontMap -> render();
 }
 

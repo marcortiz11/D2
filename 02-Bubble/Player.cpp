@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT, CLIMBING
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT, CLIMBING, BEND
 };
 
 
@@ -26,7 +26,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(9);
+	sprite->setNumberAnimations(10);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -106,6 +106,20 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(5 * widthAnim, 7 * heightAnim));
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(6 * widthAnim, 7 * heightAnim));
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(7 * widthAnim, 7 * heightAnim));
+
+	sprite->setAnimationSpeed(BEND, 8);
+	sprite->addKeyframe(BEND, glm::vec2(0 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(1 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(2 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(3 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(4 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(5 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(6 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(7 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(8 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(9 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(10 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(11 * widthAnim, 10 * heightAnim));
 	
 
 	sprite->changeAnimation(0);
@@ -114,6 +128,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	setPosition(glm::vec2(400, 140));
 	colisionBox = glm::ivec2(12, 44);
 	drawAdjustment = glm::ivec2(45, 40);
+	direction = glm::vec2(1.0f, 0.0f);
 
 	bMoving = false;
 }
@@ -142,7 +157,8 @@ void Player::update(int deltaTime)
 					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
 						targetPosPlayer = farPosition;
 						estado = Estado::FastWalking;
-						sprite->changeAnimation(MOVE_LEFT);
+						sprite->changeAnimation(MOVE_RIGHT);
+						sprite->setFlipY(true);
 					}
 				}
 				else {
@@ -169,6 +185,7 @@ void Player::update(int deltaTime)
 						targetPosPlayer = farPosition;
 						estado = Estado::FastWalking;
 						sprite->changeAnimation(MOVE_RIGHT);
+						sprite->setFlipY(false);
 					}
 				}
 				else {
@@ -203,8 +220,24 @@ void Player::update(int deltaTime)
 				startY = posPlayer.y;
 			}
 		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+			sprite->changeAnimation(BEND);
+			estado = Estado::Bend;
+		}
 		break;
 
+	case Estado::Bend:
+		if (sprite->getCurrentKeyframe() == 11) {
+			estado = Estado::Stopped;
+			if (direction.x >= 0) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(STAND_LEFT);
+			}
+		}
+		
+		break;
 	case Estado::Climbing:
 		direction = glm::normalize(targetPosPlayer - posPlayer);
 
