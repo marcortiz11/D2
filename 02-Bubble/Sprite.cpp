@@ -138,3 +138,8 @@ bool Sprite::flipY() {
 	return bFlipY;
 }
 
+glm::vec2 Sprite::getPosition()
+{
+	return position;
+}
+

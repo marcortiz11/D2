@@ -38,6 +38,8 @@ public:
 	void setFlipY(bool b);
 	bool flipY();
 
+	glm::vec2 getPosition();
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;

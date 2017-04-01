@@ -7,7 +7,7 @@
 #include "TileMap.h"
 #include "Torch.h"
 #include "Player.h"
-#include "Text.h"
+#include "StatusBar.h"
 
 
 // Scene contains all the entities of our game.
@@ -42,7 +42,7 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 
-	Text text;
+	StatusBar statusBar;
 };
 
 

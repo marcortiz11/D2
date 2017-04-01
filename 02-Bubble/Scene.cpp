@@ -51,11 +51,7 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
-	// Select which font you want to use
-	if (!text.init("fonts/OpenSans-Regular.ttf"))
-		//if(!text.init("fonts/OpenSans-Bold.ttf"))
-		//if(!text.init("fonts/DroidSerif.ttf"))
-		cout << "Could not load font!!!" << endl;
+	statusBar.init(glm::ivec2(0,0), texProgram);
 } 
 
 void Scene::update(int deltaTime)
@@ -95,7 +91,8 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	frontMap->render();
 
-	text.render("Videogames!!!", glm::vec2(10, 20), 20, glm::vec4(1, 1, 1, 1));
+	statusBar.setPosition(glm::vec2(cx, cy));
+	statusBar.render();
 }
 
 void Scene::initTorches(TileMap* torcheMap) {
