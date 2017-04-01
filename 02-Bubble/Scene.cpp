@@ -59,22 +59,22 @@ void Scene::render()
 
 	float cx = int(player->getPosition().x / CAMERA_WIDTH) * CAMERA_WIDTH;
 	float cy = int(player->getPosition().y / CAMERA_HEIGHT) * CAMERA_HEIGHT;
-	projection = glm::ortho(cx, float(CAMERA_WIDTH - 1+cx), float(CAMERA_HEIGHT - 1+cy), cy);
+	projection = glm::ortho(cx, float(CAMERA_WIDTH - 1 + cx), float(CAMERA_HEIGHT - 1 + cy), cy);
 
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	modelview = glm::mat4(1.0f);
-	
+
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	map ->render();
+	map->render();
 	player->render();
-	
+
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	frontMap -> render();
+	frontMap->render();
 }
 
 void Scene::initShaders()

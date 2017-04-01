@@ -26,7 +26,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(10);
+	sprite->setNumberAnimations(11);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -107,19 +107,45 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(6 * widthAnim, 7 * heightAnim));
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(7 * widthAnim, 7 * heightAnim));
 
+	sprite->setAnimationSpeed(CLIMBING, 8);
+	sprite->addKeyframe(CLIMBING, glm::vec2(0 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(1 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(2 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(3 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(4 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(5 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(6 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(7 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(8 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(9 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(10 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(11 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(0 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(1 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(2 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(3 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(4 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(5 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(6 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(7 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(8 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(9 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(10 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(CLIMBING, glm::vec2(11 * widthAnim, 10 * heightAnim));
+
 	sprite->setAnimationSpeed(BEND, 8);
-	sprite->addKeyframe(BEND, glm::vec2(0 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(1 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(2 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(3 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(4 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(5 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(6 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(7 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(8 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(9 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(10 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(11 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(0 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(1 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(2 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(3 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(4 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(5 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(6 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(7 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(8 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(9 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(10 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND, glm::vec2(11 * widthAnim, 11 * heightAnim));
 	
 
 	sprite->changeAnimation(0);
@@ -206,7 +232,7 @@ void Player::update(int deltaTime)
 				tilePos.x += 1;
 				targetPosPlayer = physicsMap->getPixelPos(tilePos);
 				estado = Estado::Climbing;
-				//sprite->changeAnimation(CLIMBING);
+				sprite->changeAnimation(CLIMBING);
 			}
 			else {
 				estado = Estado::Jumping;
