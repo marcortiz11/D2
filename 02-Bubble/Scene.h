@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "TileMap.h"
+#include "Torch.h"
 #include "Player.h"
 #include "Text.h"
 
@@ -21,6 +22,7 @@ public:
 	~Scene();
 
 	void init();
+	void initTorches(TileMap* torcheMap);
 	void update(int deltaTime);
 	void render();
 
@@ -31,7 +33,11 @@ private:
 	TileMap *map;
 	TileMap *physicsMap;
 	TileMap *frontMap;
+	TileMap *torchMap;
+	TileMap *doors;
+	TileMap *fallingFloor; 
 	Player *player;
+	vector<Torch*> torches;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
