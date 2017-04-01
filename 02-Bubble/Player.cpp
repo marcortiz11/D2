@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT, CLIMBING, BEND
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT
 };
 
 
@@ -26,7 +26,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(11);
+	sprite->setNumberAnimations(12);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -107,46 +107,86 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(6 * widthAnim, 7 * heightAnim));
 	sprite->addKeyframe(SLOW_LEFT, glm::vec2(7 * widthAnim, 7 * heightAnim));
 
-	sprite->setAnimationSpeed(CLIMBING, 8);
-	sprite->addKeyframe(CLIMBING, glm::vec2(0 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(1 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(2 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(3 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(4 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(5 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(6 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(7 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(8 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(9 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(10 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(11 * widthAnim, 4 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(0 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(1 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(2 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(3 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(4 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(5 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(6 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(7 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(8 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(9 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(10 * widthAnim, 10 * heightAnim));
-	sprite->addKeyframe(CLIMBING, glm::vec2(11 * widthAnim, 10 * heightAnim));
+	sprite->setAnimationSpeed(CLINBING_RIGHT, 8);
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(0 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(1 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(2 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(3 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(4 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(5 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(6 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(7 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(8 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(9 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(10 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(11 * widthAnim, 4 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(0 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(1 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(2 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(3 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(4 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(5 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(6 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(7 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(8 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(9 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(10 * widthAnim, 14 * heightAnim));
+	sprite->addKeyframe(CLINBING_RIGHT, glm::vec2(11 * widthAnim, 14 * heightAnim));
 
-	sprite->setAnimationSpeed(BEND, 8);
-	sprite->addKeyframe(BEND, glm::vec2(0 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(1 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(2 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(3 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(4 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(5 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(6 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(7 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(8 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(9 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(10 * widthAnim, 11 * heightAnim));
-	sprite->addKeyframe(BEND, glm::vec2(11 * widthAnim, 11 * heightAnim));
+	sprite->setAnimationSpeed(CLINBING_LEFT, 8);
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(0 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(1 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(2 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(3 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(4 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(5 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(6 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(7 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(8 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(9 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(10 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(11 * widthAnim, 5 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(0 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(1 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(2 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(3 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(4 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(5 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(6 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(7 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(8 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(9 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(10 * widthAnim, 15 * heightAnim));
+	sprite->addKeyframe(CLINBING_LEFT, glm::vec2(11 * widthAnim, 15 * heightAnim));
+
+	sprite->setAnimationSpeed(BEND_RIGHT, 8);
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(0 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(1 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(2 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(3 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(4 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(5 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(6 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(7 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(8 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(9 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(10 * widthAnim, 10 * heightAnim));
+	sprite->addKeyframe(BEND_RIGHT, glm::vec2(11 * widthAnim, 10 * heightAnim));
 	
+	sprite->setAnimationSpeed(BEND_LEFT, 8);
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(0 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(1 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(2 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(3 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(4 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(5 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(6 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(7 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(8 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(9 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(10 * widthAnim, 11 * heightAnim));
+	sprite->addKeyframe(BEND_LEFT, glm::vec2(11 * widthAnim, 11 * heightAnim));
+
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -183,8 +223,7 @@ void Player::update(int deltaTime)
 					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
 						targetPosPlayer = farPosition;
 						estado = Estado::FastWalking;
-						sprite->changeAnimation(MOVE_RIGHT);
-						sprite->setFlipY(true);
+						sprite->changeAnimation(MOVE_LEFT);
 					}
 				}
 				else {
@@ -228,11 +267,19 @@ void Player::update(int deltaTime)
 		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 			// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
 			glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
-			if (physicsMap->getIdTile(tilePos) == 3) {
-				tilePos.x += 1;
+			int idTile = physicsMap->getIdTile(tilePos);
+
+			if (idTile == 4 || idTile == 5) {
+				if (idTile == 4) {
+					tilePos.x += 1;
+					sprite->changeAnimation(CLINBING_RIGHT);
+				}
+				if (idTile == 5) {
+					tilePos.x -= 1;
+					sprite->changeAnimation(CLINBING_LEFT);
+				}
 				targetPosPlayer = physicsMap->getPixelPos(tilePos);
 				estado = Estado::Climbing;
-				sprite->changeAnimation(CLIMBING);
 			}
 			else {
 				estado = Estado::Jumping;
@@ -247,7 +294,12 @@ void Player::update(int deltaTime)
 			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-			sprite->changeAnimation(BEND);
+			if (direction.x >= 0) {
+				sprite->changeAnimation(BEND_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(BEND_LEFT);
+			}
 			estado = Estado::Bend;
 		}
 		break;
