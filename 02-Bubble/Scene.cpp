@@ -52,6 +52,7 @@ void Scene::init()
 	currentTime = 0.0f;
 
 	statusBar.init(glm::ivec2(0,0), texProgram);
+	menu.init(texProgram);
 } 
 
 void Scene::update(int deltaTime)
@@ -60,6 +61,7 @@ void Scene::update(int deltaTime)
 	player->update(deltaTime);
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
 	statusBar.update(deltaTime);
+	menu.update(deltaTime);
 }
 
 void Scene::render()
@@ -94,6 +96,14 @@ void Scene::render()
 
 	statusBar.setPosition(glm::vec2(cx, cy));
 	statusBar.render();
+
+	texProgram.use();
+	texProgram.setUniformMatrix4f("projection", projection);
+	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	modelview = glm::mat4(1.0f);
+	texProgram.setUniformMatrix4f("modelview", modelview);
+	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	menu.render();
 }
 
 void Scene::initTorches(TileMap* torcheMap) {

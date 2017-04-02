@@ -55,7 +55,6 @@ void StatusBar::update(int deltaTime)
 
 }
 
-
 void StatusBar::render() 
 {
 	sprite->render();
