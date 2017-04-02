@@ -1,7 +1,9 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
-
+#include <cstdlib>
+#include <iostream>
+#include <ctime>
 
 //Remove console (only works in Visual Studio)
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
@@ -102,6 +104,8 @@ int main(int argc, char **argv){
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
+	std::srand(std::time(0)); // use current time as seed for random generator
+
 	// Game instance initialization
 	Game::instance().init();
 	prevTime = glutGet(GLUT_ELAPSED_TIME);

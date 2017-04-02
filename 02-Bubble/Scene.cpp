@@ -67,8 +67,9 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	enemy->update(deltaTime, player->getPosition());
+	enemy->update(deltaTime, *player);
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
+	statusBar.setLife(player->getLife());
 	statusBar.update(deltaTime);
 	menu.update(deltaTime);
 }

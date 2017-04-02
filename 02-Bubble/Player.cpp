@@ -13,7 +13,10 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT, SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT,
+	SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT,
+	ATACK_RIGHT, ATACK_LEFT, ATACK_WALK_RIGHT, ATACK_WALK_LEFT, ATACK_PAUSE_RIGHT,
+	ATACK_PAUSE_LEFT
 };
 
 
@@ -26,7 +29,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(12);
+	sprite->setNumberAnimations(16);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -188,6 +191,34 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(BEND_LEFT, glm::vec2(11 * widthAnim, 11 * heightAnim));
 
 
+	sprite->setAnimationSpeed(ATACK_RIGHT, 8);
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(0 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(1 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(2 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(3 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(4 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(5 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(6 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(7 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(8 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(9 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(10 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(11 * widthAnim, 17 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_LEFT, 8);
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(0 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(1 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(2 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(3 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(4 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(5 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(6 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(7 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(8 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(9 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(10 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(11 * widthAnim, 18 * heightAnim));
+
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 
@@ -197,11 +228,22 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	direction = glm::vec2(1.0f, 0.0f);
 
 	bMoving = false;
+	life = 3;
 }
 
 glm::vec2 Player::getPosition()
 {
 	return posPlayer;
+}
+
+int Player::getLife()
+{
+	return life;
+}
+
+void Player::beaten()
+{
+	life -= 1;
 }
 
 void Player::update(int deltaTime)

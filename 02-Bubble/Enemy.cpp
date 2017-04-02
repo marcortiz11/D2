@@ -16,7 +16,7 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(12);
+	sprite->setNumberAnimations(18);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -177,6 +177,45 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	sprite->addKeyframe(BEND_LEFT, glm::vec2(10 * widthAnim, 11 * heightAnim));
 	sprite->addKeyframe(BEND_LEFT, glm::vec2(11 * widthAnim, 11 * heightAnim));
 
+	sprite->setAnimationSpeed(ATACK_RIGHT, 8);
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(0 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(1 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(2 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(3 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(4 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(5 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(6 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(7 * widthAnim, 16 * heightAnim));
+	
+	sprite->setAnimationSpeed(ATACK_LEFT, 8);
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(0 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(1 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(2 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(3 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(4 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(5 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(6 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(7 * widthAnim, 17 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_WALK_RIGHT, 1);
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(0 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(1 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(2 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(3 * widthAnim, 16 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_WALK_LEFT, 1);
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(0 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(1 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(2 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(3 * widthAnim, 17 * heightAnim));
+
+
+	sprite->setAnimationSpeed(ATACK_PAUSE_RIGHT, 1);
+	sprite->addKeyframe(ATACK_PAUSE_RIGHT, glm::vec2(0 * widthAnim, 16 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_PAUSE_LEFT, 1);
+	sprite->addKeyframe(ATACK_PAUSE_LEFT, glm::vec2(0 * widthAnim, 17 * heightAnim));
+
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -187,11 +226,13 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	direction = glm::vec2(1.0f, 0.0f);
 
 	bMoving = false;
+	bAtacking = false;
 	estado = Estado::Falling;
 }
 
-void Enemy::update(int deltaTime, glm::vec2 positionPlayer)
+void Enemy::update(int deltaTime, Player& player)
 {
+	glm::vec2 positionPlayer = player.getPosition();
 	sprite->update(deltaTime);
 
 	switch(estado) {
@@ -202,16 +243,62 @@ void Enemy::update(int deltaTime, glm::vec2 positionPlayer)
 				targetPosEnemy = posEnemy;
 				if (direction.x > 0) {
 					targetPosEnemy.x = posEnemy.x + 32;
-					sprite->changeAnimation(MOVE_RIGHT);
+					sprite->changeAnimation(ATACK_WALK_RIGHT);
 
 				}
 				else if (direction.x < 0) {
 					targetPosEnemy.x = posEnemy.x - 32;
-					sprite->changeAnimation(MOVE_LEFT);
+					sprite->changeAnimation(ATACK_WALK_LEFT);
 				}
 				estado = Estado::SlowWalking;
 			}
+			else {
+				if (direction.x > 0) {
+					sprite->changeAnimation(ATACK_PAUSE_RIGHT);
+
+				}
+				else if (direction.x < 0) {
+					sprite->changeAnimation(ATACK_PAUSE_LEFT);
+				}
+				estado = Estado::Fighting;
+			}
 			
+		}
+		break;
+	case Estado::Atacking:
+		waitAtack -= deltaTime;
+		if (waitAtack <= 0 && !bAtacking) {
+			bAtacking = true;
+			bBeaten = false;
+			timeToBeReady = 2000;
+			if (direction.x > 0) {
+				sprite->changeAnimation(ATACK_RIGHT);
+			}
+			else if (direction.x < 0) {
+				sprite->changeAnimation(ATACK_LEFT);
+			}
+		}
+
+		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
+			&& sprite->getCurrentKeyframe() == 5 && !bBeaten) {
+			player.beaten();
+			bBeaten = true;
+		}
+		
+		timeToBeReady -= deltaTime;
+		if (timeToBeReady <= 0) {
+			bAtacking = false;
+			estado = Estado::Stopped;
+		}
+		break;
+
+	case Estado::Fighting:
+		if (positionPlayer.y == posEnemy.y && abs(positionPlayer.x - posEnemy.x) <= 32.0f) {
+			waitAtack = (std::rand() % 300);
+			estado = Estado::Atacking;
+		}
+		else {
+			estado = Estado::Stopped;
 		}
 		break;
 

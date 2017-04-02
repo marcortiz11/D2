@@ -74,7 +74,7 @@ void StatusBar::setPosition(glm::vec2 pos)
 	sprite->setPosition(glm::vec2(pos.x, pos.y+181));
 }
 
-void StatusBar::setLife(Live live)
+void StatusBar::setLifeAnimation(Live live)
 {
 	switch (live) {
 	case THREE_LIVES:
@@ -88,6 +88,24 @@ void StatusBar::setLife(Live live)
 		break;
 	case DEAD:
 		sprite->changeAnimation(3);
+		break;
+	}
+}
+
+void StatusBar::setLife(int live)
+{
+	switch (live) {
+	case 0:
+		setLifeAnimation(DEAD);
+		break;
+	case 1:
+		setLifeAnimation(ONE_LIVE);
+		break;
+	case 2:
+		setLifeAnimation(TWO_LIVES);
+		break;
+	case 3:
+		setLifeAnimation(THREE_LIVES);
 		break;
 	}
 }

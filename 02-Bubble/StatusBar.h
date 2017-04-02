@@ -22,7 +22,8 @@ public:
 
 	void setPosition(glm::vec2 pos);
 
-	void setLife(Live live);
+	void setLifeAnimation(Live live);
+	void setLife(int live);
 
 private:
 	glm::ivec2 tileMapDispl;
