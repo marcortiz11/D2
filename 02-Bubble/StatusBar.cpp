@@ -64,7 +64,7 @@ void StatusBar::render()
 	if (elapsedTime % 60000 >= 57000) {
 		int minutes = elapsedTime / 1000 / 60;
 		char str[16];
-		sprintf(str, "%d MINUTES LEFT", minutes);
+		sprintf(str, "%d MINUTES LEFT", minutes + 1);
 		text.render(str, glm::vec2(400,609), 25, glm::vec4(1, 1, 1, 1));
 	}
 		
