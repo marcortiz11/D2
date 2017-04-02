@@ -59,6 +59,7 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
+	statusBar.update(deltaTime);
 }
 
 void Scene::render()
