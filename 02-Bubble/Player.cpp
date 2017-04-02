@@ -10,16 +10,6 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 7
 
-
-enum PlayerAnims
-{
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT,
-	SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT,
-	ATACK_RIGHT, ATACK_LEFT, ATACK_WALK_RIGHT, ATACK_WALK_LEFT, ATACK_PAUSE_RIGHT,
-	ATACK_PAUSE_LEFT
-};
-
-
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	estado = Estado::Falling;
@@ -29,7 +19,16 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(16);
+	sprite->setNumberAnimations(21);
+
+	sprite->setAnimationSpeed(FALLING_LEFT, 1);
+	sprite->addKeyframe(FALLING_LEFT, glm::vec2(1 * widthAnim, 1 * heightAnim));
+
+	sprite->setAnimationSpeed(FALLING_RIGHT, 1);
+	sprite->addKeyframe(FALLING_RIGHT, glm::vec2(1 * widthAnim, 0 * heightAnim));
+
+	sprite->setAnimationSpeed(DEAD, 1);
+	sprite->addKeyframe(DEAD, glm::vec2(2 * widthAnim, 0 * heightAnim));
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -192,32 +191,43 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 
 	sprite->setAnimationSpeed(ATACK_RIGHT, 8);
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(0 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(1 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(2 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(3 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(4 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(5 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(6 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(7 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(8 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(9 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(10 * widthAnim, 17 * heightAnim));
-	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(11 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(0 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(1 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(2 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(3 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(4 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(5 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(6 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_RIGHT, glm::vec2(7 * widthAnim, 16 * heightAnim));
 
 	sprite->setAnimationSpeed(ATACK_LEFT, 8);
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(0 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(1 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(2 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(3 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(4 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(5 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(6 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(7 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(8 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(9 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(10 * widthAnim, 18 * heightAnim));
-	sprite->addKeyframe(ATACK_LEFT, glm::vec2(11 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(0 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(1 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(2 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(3 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(4 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(5 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(6 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_LEFT, glm::vec2(7 * widthAnim, 17 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_WALK_RIGHT, 3);
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(0 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(1 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(2 * widthAnim, 16 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_RIGHT, glm::vec2(3 * widthAnim, 16 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_WALK_LEFT, 3);
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(0 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(1 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(2 * widthAnim, 17 * heightAnim));
+	sprite->addKeyframe(ATACK_WALK_LEFT, glm::vec2(3 * widthAnim, 17 * heightAnim));
+
+
+	sprite->setAnimationSpeed(ATACK_PAUSE_RIGHT, 1);
+	sprite->addKeyframe(ATACK_PAUSE_RIGHT, glm::vec2(0 * widthAnim, 16 * heightAnim));
+
+	sprite->setAnimationSpeed(ATACK_PAUSE_LEFT, 1);
+	sprite->addKeyframe(ATACK_PAUSE_LEFT, glm::vec2(0 * widthAnim, 17 * heightAnim));
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -246,13 +256,151 @@ void Player::beaten()
 	life -= 1;
 }
 
-void Player::update(int deltaTime)
+void Player::update(int deltaTime, vector<Enemy*>& enemies)
 {
 	sprite->update(deltaTime);
 
+	if (life <= 0) {
+		sprite->changeAnimation(DEAD);
+		return;
+	}
+
+	bool enemyInSight = false;
+
 	switch (estado) {
-	case Estado::Stopped:
+	case Estado::AtackWalk:
+		direction = glm::normalize(targetPosPlayer - posPlayer);
+
+		posPlayer += direction*0.4f;
+
+		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
+			posPlayer = targetPosPlayer;
+			estado = Estado::Falling;
+			if (direction.x > 0) {
+				sprite->changeAnimation(ATACK_PAUSE_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(ATACK_PAUSE_LEFT);
+			}
+		}
+		break;
+	case Estado::Atacking:
+		waitAtack -= deltaTime;
+		if (waitAtack <= 0 && !bAtacking) {
+			bAtacking = true;
+			bBeaten = false;
+			timeToBeReady = 1000;
+			if (direction.x > 0) {
+				sprite->changeAnimation(ATACK_RIGHT);
+			}
+			else if (direction.x < 0) {
+				sprite->changeAnimation(ATACK_LEFT);
+			}
+		}
+
+		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
+			&& sprite->getCurrentKeyframe() == 5 && !bBeaten) {
+			target->beaten();
+			bBeaten = true;
+		}
+
+		timeToBeReady -= deltaTime;
+		if (timeToBeReady <= 0) {
+			bAtacking = false;
+			estado = Estado::Stopped;
+		}
+		break;
+	case Estado::Fighting:
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
+
+			int animation = sprite->animation();
+
+			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
+
+			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+				targetPosPlayer = closePosition;
+				estado = Estado::AtackWalk;
+				sprite->changeAnimation(ATACK_WALK_LEFT);
+			}
+			else {
+				estado = Estado::Stopped;
+				sprite->changeAnimation(animation);
+			}
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
+			int animation = sprite->animation();
+
+			glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
+
+			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+				targetPosPlayer = closePosition;
+				estado = Estado::AtackWalk;
+				sprite->changeAnimation(ATACK_WALK_RIGHT);
+			}
+			else {
+				estado = Estado::Stopped;
+				sprite->changeAnimation(animation);
+			}
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+			// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
+			glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
+			int idTile = physicsMap->getIdTile(tilePos);
+
+			if (idTile == 4 || idTile == 5) {
+				if (idTile == 4) {
+					tilePos.x += 1;
+					sprite->changeAnimation(CLINBING_RIGHT);
+				}
+				if (idTile == 5) {
+					tilePos.x -= 1;
+					sprite->changeAnimation(CLINBING_LEFT);
+				}
+				targetPosPlayer = physicsMap->getPixelPos(tilePos);
+				estado = Estado::Climbing;
+			}
+			else {
+				estado = Estado::Jumping;
+				if (direction.x >= 0) {
+					sprite->changeAnimation(JUMP_RIGHT);
+				}
+				else {
+					sprite->changeAnimation(JUMP_LEFT);
+				}
+				jumpAngle = 0;
+				startY = posPlayer.y;
+			}
+		}
+		else if (Game::instance().getKey('a') || Game::instance().getKey('A')) {
+			estado = Estado::Atacking;			
+		}
+		break;
+
+	case Estado::Stopped:
+		if (direction.x >= 0) {
+			sprite->changeAnimation(STAND_RIGHT);
+		}
+		else {
+			sprite->changeAnimation(STAND_LEFT);
+		}
+
+		for (auto& e : enemies) {
+			if (e->getLife() > 0 && posPlayer.y == e->getPosition().y) {
+				enemyInSight = true;
+				target = e;
+			}
+		}
+		
+		if (enemyInSight) {
+			estado = Estado::Fighting;
+			if (direction.x >= 0) {
+				sprite->changeAnimation(ATACK_PAUSE_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(ATACK_PAUSE_LEFT);
+			}
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
 
 			int animation = sprite->animation();
 

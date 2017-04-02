@@ -48,7 +48,7 @@ private:
 
 	Menu menu;
 
-	Enemy* enemy;
+	vector<Enemy*> enemies;
 };
 
 

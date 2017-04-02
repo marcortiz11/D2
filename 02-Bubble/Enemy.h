@@ -3,6 +3,8 @@
 #include "TileMap.h"
 #include "Player.h"
 
+class Player;
+
 class Enemy
 {
 public:
@@ -12,6 +14,7 @@ public:
 
 	enum PlayerAnims
 	{
+		FALLING_LEFT, FALLING_RIGHT, DEAD,
 		STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, 
 		SLOW_RIGHT, SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT,
 		ATACK_RIGHT, ATACK_LEFT, ATACK_WALK_RIGHT, ATACK_WALK_LEFT, ATACK_PAUSE_RIGHT,
@@ -28,7 +31,10 @@ public:
 
 	void setPhysicsTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-	glm::vec2 getPosition();
+	glm::vec2 getPosition() const;
+
+	void beaten();
+	int getLife();
 
 private:
 	bool bJumping, bMoving;
@@ -43,6 +49,8 @@ private:
 	glm::ivec2 drawAdjustment;
 
 	Estado estado;
+
+	int life;
 
 	int waitAtack;
 	int timeToBeReady;

@@ -16,7 +16,16 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	double widthAnim = 1.0 / 16.0;
 	double heightAnim = 1.0 / 20.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(18);
+	sprite->setNumberAnimations(21);
+
+	sprite->setAnimationSpeed(FALLING_LEFT, 1);
+	sprite->addKeyframe(FALLING_LEFT, glm::vec2(1* widthAnim, 1 * heightAnim));
+
+	sprite->setAnimationSpeed(FALLING_RIGHT, 1);
+	sprite->addKeyframe(FALLING_RIGHT, glm::vec2(1 * widthAnim, 0 * heightAnim));
+
+	sprite->setAnimationSpeed(DEAD, 1);
+	sprite->addKeyframe(DEAD, glm::vec2(2 * widthAnim, 0 * heightAnim));
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 1 * heightAnim));
@@ -228,13 +237,28 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	bMoving = false;
 	bAtacking = false;
 	estado = Estado::Falling;
+	life = 3;
 }
 
 void Enemy::update(int deltaTime, Player& player)
 {
-	glm::vec2 positionPlayer = player.getPosition();
 	sprite->update(deltaTime);
-
+	
+	if (life <= 0) {
+		sprite->changeAnimation(DEAD);
+		return;
+	}
+	
+	if (player.getLife() == 0) {
+		if (direction.x > 0) {
+			sprite->changeAnimation(STAND_RIGHT);
+		}
+		else {
+			sprite->changeAnimation(STAND_LEFT);
+		}
+		return;
+	}
+	glm::vec2 positionPlayer = player.getPosition();
 	switch(estado) {
 	case Estado::Stopped:
 		if (positionPlayer.y == posEnemy.y) {
@@ -270,7 +294,7 @@ void Enemy::update(int deltaTime, Player& player)
 		if (waitAtack <= 0 && !bAtacking) {
 			bAtacking = true;
 			bBeaten = false;
-			timeToBeReady = 2000;
+			timeToBeReady = 1000;
 			if (direction.x > 0) {
 				sprite->changeAnimation(ATACK_RIGHT);
 			}
@@ -354,7 +378,17 @@ void Enemy::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x - drawAdjustment.x), float(tileMapDispl.y + posEnemy.y - drawAdjustment.y)));
 }
 
-glm::vec2 Enemy::getPosition()
+glm::vec2 Enemy::getPosition() const
 {
 	return posEnemy;
+}
+
+void Enemy::beaten()
+{
+	life -= 1;
+}
+
+int Enemy::getLife()
+{
+	return life;
 }
