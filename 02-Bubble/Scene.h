@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "StatusBar.h"
 #include "Menu.h"
+#include "Enemy.h"
 
 
 // Scene contains all the entities of our game.
@@ -46,6 +47,8 @@ private:
 	StatusBar statusBar;
 
 	Menu menu;
+
+	Enemy* enemy;
 };
 
 

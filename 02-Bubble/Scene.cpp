@@ -42,12 +42,20 @@ void Scene::init()
 	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	initTorches(torchMap);
-	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
+
+	player = new Player();
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
 	player->setPhysicsTileMap(physicsMap);
+	
+	enemy = new Enemy();
+	enemy->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	glm::vec2 enemyPos((INIT_PLAYER_X_TILES + 2) * mapTileSizeX, (INIT_PLAYER_Y_TILES+2) * mapTileSizeY);
+	enemy->setPosition(enemyPos);
+	enemy->setPhysicsTileMap(physicsMap);
+
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
@@ -59,6 +67,7 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	enemy->update(deltaTime, player->getPosition());
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
 	statusBar.update(deltaTime);
 	menu.update(deltaTime);
@@ -88,6 +97,7 @@ void Scene::render()
 	for (int i = 0; i < torches.size(); ++i) torches[i]->render();
 
 	player->render();
+	enemy->render();
 
 	texProgram.setUniform1f("invertir", 0.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);

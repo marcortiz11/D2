@@ -399,7 +399,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		break;
-		}
+	}
 
 		setPosition(posPlayer);
 }
