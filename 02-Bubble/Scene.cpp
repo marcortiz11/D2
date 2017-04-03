@@ -57,7 +57,7 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
 	player->setPhysicsTileMap(physicsMap);
-	//player->setFrontMap(frontMap);
+	player->setFrontMap(frontMap);
 
 
 	Enemy* enemy = new Enemy();

@@ -21,6 +21,7 @@ public:
 	void render();
 	
 	void setPhysicsTileMap(TileMap *tileMap);
+	void setFrontMap(TileMap* tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 
@@ -28,7 +29,7 @@ public:
 	int getLife();
 
 	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing,
-		Bend, Fighting, Atacking, AtackWalk
+		Bend, Fighting, Atacking, AtackWalk, Drinking
 	};
 
 	enum PlayerAnims
@@ -37,7 +38,7 @@ public:
 		STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT,
 		SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT,
 		ATACK_RIGHT, ATACK_LEFT, ATACK_WALK_RIGHT, ATACK_WALK_LEFT, ATACK_PAUSE_RIGHT,
-		ATACK_PAUSE_LEFT
+		ATACK_PAUSE_LEFT, DRINK_RIGHT, DRINK_LEFT,
 	};
 
 
@@ -49,6 +50,7 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *physicsMap;
+	TileMap *frontMap;
 
 	glm::ivec2 colisionBox;
 	glm::ivec2 drawAdjustment;
@@ -61,6 +63,7 @@ private:
 
 	int waitAtack;
 	int timeToBeReady;
+
 	bool bAtacking;
 	bool bBeaten;
 
@@ -69,10 +72,12 @@ private:
 	sf::SoundBuffer sndBuff_danoPropio;
 	sf::SoundBuffer sndBuff_golpeAire;
 	sf::SoundBuffer sndBuff_desenfundar;
+	sf::SoundBuffer sndBuff_beberVida;
 	sf::Sound snd_danoEspada;
 	sf::Sound snd_danoPropio;
 	sf::Sound snd_golpeAire;
 	sf::Sound snd_desenfundar;
+	sf::Sound snd_beberVida;
 };
 
 

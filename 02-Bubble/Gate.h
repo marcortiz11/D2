@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "ActivationButton.h"
 #include "TileMap.h"
+#include <SFML/Audio.hpp>
 
 
 class Gate
@@ -25,6 +26,9 @@ private:
 	int state = 2;
 
 	glm::ivec2 tileMapPos;
+
+	sf::SoundBuffer sndBuff_puerta;
+	sf::Sound snd_puerta;
 };
 
 

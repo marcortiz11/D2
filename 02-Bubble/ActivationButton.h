@@ -4,7 +4,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
-
+#include <SFML/Audio.hpp>
 
 class ActivationButton
 {
@@ -22,6 +22,9 @@ private:
 	TileMap *map;
 	int TILEX, TILEY;
 	int state = 0;
+
+	sf::SoundBuffer sndBuff_boton;
+	sf::Sound snd_boton;
 };
 
 

@@ -39,6 +39,8 @@ void Gate::init(ActivationButton *button, const glm::ivec2 &tileMapPos, ShaderPr
 	this->tileMapPos = tileMapPos;
 	b = button;
 
+	sndBuff_puerta.loadFromFile("sounds/puerta2.wav");
+	snd_puerta.setBuffer(sndBuff_puerta);
 }
 
 void Gate::update(int deltaTime, TileMap* pyisics)
@@ -47,6 +49,7 @@ void Gate::update(int deltaTime, TileMap* pyisics)
 	if (state == CLOSED && b->isPushed()) {
 		sprite->changeAnimation(MOVING);
 		state = MOVING;
+		snd_puerta.play();
 	}
 	if (state == MOVING && sprite->getCurrentKeyframe() == 4) {
 		pyisics->clearPath(pyisics->getTilePos(tileMapPos));
