@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sprite.h"
+#include <SFML/Audio.hpp>
 
 class Menu
 {
@@ -24,6 +25,9 @@ private:
 
 	int waitTime;
 	const int WAIT_TIME = 1;
+
+	sf::SoundBuffer sndBuffIntroduccion;
+	sf::Sound sndIntroduccion;
 };
 
 

@@ -45,6 +45,8 @@ void StatusBar::init(const glm::ivec2 & pos, ShaderProgram & shaderProgram)
 	sprite->setPosition(glm::vec2(0,189-8));
 
 	elapsedTime = 3'600'000;
+
+
 }
 
 void StatusBar::update(int deltaTime)

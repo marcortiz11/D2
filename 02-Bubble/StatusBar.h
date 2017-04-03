@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Text.h"
+#include <SFML/Audio.hpp>
 
 class StatusBar
 {
@@ -33,5 +34,7 @@ private:
 	Text text;
 
 	int elapsedTime;
+
+
 };
 

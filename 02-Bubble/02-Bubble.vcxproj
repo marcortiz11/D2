@@ -86,13 +86,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libs\Simple OpenGL Image Library\src;$(SolutionDir)\libs\freeglut\include;$(SolutionDir)\libs\glew-1.13.0\include;$(SolutionDir)\libs\glm;$(SolutionDir)\libs\freetype-2.3.5-1-bin\include;$(SolutionDir)\libs\freetype-2.3.5-1-bin\include\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs\Simple OpenGL Image Library\src;$(SolutionDir)\libs\freeglut\include;$(SolutionDir)\libs\glew-1.13.0\include;$(SolutionDir)\libs\glm;$(SolutionDir)\libs\freetype-2.3.5-1-bin\include;$(SolutionDir)\libs\freetype-2.3.5-1-bin\include\freetype2;$(SolutionDir)\libs\sfml\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libs\Simple OpenGL Image Library\projects\VC9\Debug;$(SolutionDir)\libs\freeglut\lib;$(SolutionDir)\libs\glew-1.13.0\lib\Release\Win32;$(SolutionDir)\libs\freetype-2.3.5-1-bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SOIL.lib;glew32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\Simple OpenGL Image Library\projects\VC9\Debug;$(SolutionDir)\libs\freeglut\lib;$(SolutionDir)\libs\glew-1.13.0\lib\Release\Win32;$(SolutionDir)\libs\freetype-2.3.5-1-bin\lib;$(SolutionDir)\libs\sfml\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SOIL.lib;glew32.lib;freetype.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

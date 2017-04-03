@@ -35,6 +35,12 @@ void Menu::init(ShaderProgram & shaderProgram)
 	screen = Screen::Jugar;
 	bRender = true;
 	waitTime = 0;
+
+	if (!sndBuffIntroduccion.loadFromFile("sounds/intro.wav")) {
+		throw std::runtime_error("Error al cargar el fichero de sonido");
+	}
+	sndIntroduccion.setBuffer(sndBuffIntroduccion);
+	sndIntroduccion.play();
 }
 
 void Menu::update(int deltaTime)
@@ -57,6 +63,7 @@ void Menu::update(int deltaTime)
 			}
 			else if (Game::instance().getKey(13)) { //Press enter
 				bRender = false;
+				sndIntroduccion.pause();
 			}
 			break;
 		case Instrucciones:
