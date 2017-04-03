@@ -239,6 +239,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	bMoving = false;
 	life = 3;
+
+	bool carga = true;
+	carga = carga && sndBuff_danoEspada.loadFromFile("sounds/danoEspada.wav");
+	carga = carga && sndBuff_danoPropio.loadFromFile("sounds/danoPropio.wav");
+	carga = carga && sndBuff_golpeAire.loadFromFile("sounds/espadaAlAire.wav");
+	carga = carga && sndBuff_desenfundar.loadFromFile("sounds/desenfundarEspada.wav");
+
+	if (!carga) {
+		throw std::runtime_error("Error al cargar algun sonido.");
+	}
+
+
 }
 
 glm::vec2 Player::getPosition()
@@ -251,9 +263,11 @@ int Player::getLife()
 	return life;
 }
 
-void Player::beaten()
+bool Player::beaten()
 {
 	life -= 1;
+	snd_danoPropio.play();
+	return true;
 }
 
 void Player::update(int deltaTime, vector<Enemy*>& enemies)
@@ -299,8 +313,29 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 		}
 
 		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
+			&& sprite->getCurrentKeyframe() == 2 && !bBeaten) {
+			snd_golpeAire.play();
+		}
+
+		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
 			&& sprite->getCurrentKeyframe() == 5 && !bBeaten) {
-			target->beaten();
+			int distancia = target->getPosition().x - posPlayer.x;
+			if (direction.x > 0) { // Esta mirando hacia la derecha
+				if (distancia >= 0 && distancia <= 32) {
+					if (target->beaten()) {
+						snd_danoEspada.play();
+					}
+				}
+			}
+			else {
+				if (distancia >= -32 && distancia <= 0) {
+					if (target->beaten()) {
+						snd_danoEspada.play();
+					}
+				}
+			}
+			
+			
 			bBeaten = true;
 		}
 
@@ -393,6 +428,7 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 		
 		if (enemyInSight) {
 			estado = Estado::Fighting;
+			snd_desenfundar.play();
 			if (direction.x >= 0) {
 				sprite->changeAnimation(ATACK_PAUSE_RIGHT);
 			}
@@ -515,10 +551,10 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 			posPlayer = targetPosPlayer;
 			estado = Estado::Falling;
 			if (direction.x > 0) {
-				sprite->changeAnimation(STAND_RIGHT);
+				sprite->changeAnimation(FALLING_RIGHT);
 			}
 			else {
-				sprite->changeAnimation(STAND_LEFT);
+				sprite->changeAnimation(FALLING_LEFT);
 			}
 		}
 			break;
@@ -565,10 +601,10 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 			posPlayer = targetPosPlayer;
 			estado = Estado::Falling;
 			if (direction.x > 0) {
-				sprite->changeAnimation(STAND_RIGHT);
+				sprite->changeAnimation(FALLING_RIGHT);
 			}
 			else {
-				sprite->changeAnimation(STAND_LEFT);
+				sprite->changeAnimation(FALLING_LEFT);
 			}
 		}
 		break;

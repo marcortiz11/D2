@@ -305,7 +305,21 @@ void Enemy::update(int deltaTime, Player& player)
 
 		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
 			&& sprite->getCurrentKeyframe() == 5 && !bBeaten) {
-			player.beaten();
+			int distancia = player.getPosition().x - positionPlayer.x;
+			if (direction.x > 0) { // Esta mirando hacia la derecha
+				if (distancia >= 0 && distancia <= 32) {
+					if (player.beaten()) {
+						//snd_danoEspada.play();
+					}
+				}
+			}
+			else {
+				if (distancia >= -32 && distancia <= 0) {
+					if (player.beaten()) {
+						//snd_danoEspada.play();
+					}
+				}
+			}
 			bBeaten = true;
 		}
 		
@@ -383,9 +397,10 @@ glm::vec2 Enemy::getPosition() const
 	return posEnemy;
 }
 
-void Enemy::beaten()
+bool Enemy::beaten()
 {
 	life -= 1;
+	return true;
 }
 
 int Enemy::getLife()
