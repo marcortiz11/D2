@@ -37,7 +37,7 @@ public:
 	glm::vec2 getPixelPos(const glm::vec2& tilePos);
 
 	int getIdTile(glm::ivec2 pos);
-
+	void clearPath(glm::ivec2 pos);
 	int* getTileMap() { return map; };
 
 	int getMapSizeX() { return mapSize.x; };

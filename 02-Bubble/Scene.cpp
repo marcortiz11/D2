@@ -30,6 +30,12 @@ Scene::~Scene()
 	for (int i = 0; i < torches.size(); ++i) {
 		delete torches[i];
 	}
+	for (int i = 0; i < gates.size(); ++i) {
+		delete gates[i];
+	}
+	for (int i = 0; i < buttons.size(); i++) {
+		delete buttons[i];
+	}
 }
 
 
@@ -40,8 +46,10 @@ void Scene::init()
 	physicsMap = TileMap::createTileMap("levels/level05.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
 	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	trapsMap = TileMap::createTileMap("levels/trap05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram); //Mapa para diferentes tipos de trampas
 
 	initTorches(torchMap);
+	initTraps(trapsMap);
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
 
@@ -49,7 +57,9 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
 	player->setPhysicsTileMap(physicsMap);
-	
+	//player->setFrontMap(frontMap);
+
+
 	Enemy* enemy = new Enemy();
 	enemy->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	glm::vec2 enemyPos((INIT_PLAYER_X_TILES + 2) * mapTileSizeX, (INIT_PLAYER_Y_TILES+2) * mapTileSizeY);
@@ -73,6 +83,8 @@ void Scene::update(int deltaTime)
 		e->update(deltaTime, *player);
 	}
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
+	for (int i = 0; i < buttons.size(); ++i) buttons[i]->update(deltaTime, player->getPosition());
+	for (int i = 0; i < gates.size(); ++i) gates[i]->update(deltaTime, physicsMap);
 	statusBar.setLife(player->getLife());
 	statusBar.update(deltaTime);
 	menu.update(deltaTime);
@@ -100,11 +112,14 @@ void Scene::render()
 	texProgram.setUniform1f("invertir", 0.0f);
 
 	for (int i = 0; i < torches.size(); ++i) torches[i]->render();
+	for (int i = 0; i < buttons.size(); ++i) buttons[i]->render();
+	for (int i = 0; i < gates.size(); ++i) gates[i]->render();
 
 	player->render();
 	for (Enemy* e : enemies) {
 		e->render();
 	}
+	
 
 	texProgram.setUniform1f("invertir", 0.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
@@ -141,6 +156,41 @@ void Scene::initTorches(TileMap* torcheMap) {
 				torches.push_back(torch);
 			}
 		}
+	}
+}
+
+void Scene::initTraps(TileMap* trapsMap) {
+
+	int* matrix = trapsMap->getTileMap();
+	int rows = trapsMap->getMapSizeY();
+	int cols = trapsMap->getMapSizeX();
+
+	int tileSizeX = trapsMap->getTileSizeX();
+	int tileSizeY = trapsMap->getTileSizeY();
+
+	int elems = cols * rows;
+	int i = 0;
+	while (i < elems) {
+		//Hemos encontrado un activador
+		if (matrix[i] == 1) {
+			ActivationButton* b = new ActivationButton();
+			b->init(map, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
+			buttons.push_back(b);
+			++i;
+			while (i<elems && matrix[i] != 1) {
+				if (matrix[i] == 2) {
+					Gate* g = new Gate();
+					g->init(b, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
+					gates.push_back(g);
+				}
+				++i;
+			}
+			--i;
+		}
+		else if (matrix[i] == 3) {
+			//Trampa2
+		}
+		++i;
 	}
 }
 

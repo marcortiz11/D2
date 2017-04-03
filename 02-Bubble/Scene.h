@@ -11,6 +11,9 @@
 #include "Menu.h"
 #include "Enemy.h"
 
+#include "Gate.h"
+#include "ActivationButton.h"
+
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -25,6 +28,7 @@ public:
 
 	void init();
 	void initTorches(TileMap* torcheMap);
+	void initTraps(TileMap* trapMap);
 	void update(int deltaTime);
 	void render();
 
@@ -37,7 +41,8 @@ private:
 	TileMap *frontMap;
 	TileMap *torchMap;
 	TileMap *doors;
-	TileMap *fallingFloor; 
+	TileMap *fallingFloor;
+	TileMap *trapsMap;
 	Player *player;
 	vector<Torch*> torches;
 	ShaderProgram texProgram;
@@ -49,6 +54,8 @@ private:
 	Menu menu;
 
 	vector<Enemy*> enemies;
+	vector<Gate*> gates;
+	vector<ActivationButton*> buttons;
 };
 
 
