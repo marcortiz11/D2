@@ -250,6 +250,10 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		throw std::runtime_error("Error al cargar algun sonido.");
 	}
 
+	snd_danoEspada.setBuffer(sndBuff_danoEspada);
+	snd_danoPropio.setBuffer(sndBuff_danoPropio);
+	snd_golpeAire.setBuffer(sndBuff_golpeAire);
+	snd_desenfundar.setBuffer(sndBuff_desenfundar);
 
 }
 
