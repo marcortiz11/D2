@@ -2,6 +2,12 @@
 #include "Game.h"
 #include "GL/glut.h"
 
+Menu::Menu() :
+	WAIT_TIME(100)
+{
+
+}
+
 void Menu::init(ShaderProgram & shaderProgram)
 {
 	spritesheet.loadFromFile("images/menu_completo.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -61,8 +67,8 @@ bool Menu::update(int deltaTime)
 				waitTime = WAIT_TIME;
 			}
 			else if (Game::instance().getKey(13)) { //Press enter
-				return false;
 				sndIntroduccion.pause();
+				return false;
 			}
 			break;
 		case Instrucciones:

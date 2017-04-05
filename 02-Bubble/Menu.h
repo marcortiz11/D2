@@ -6,6 +6,7 @@
 class Menu
 {
 public:
+	Menu();
 	enum Screen {
 		Jugar, Instrucciones, Creditos, InstruccionesTexto, CreditoTexto
 	};
@@ -22,7 +23,7 @@ private:
 	Screen screen;
 
 	int waitTime;
-	const int WAIT_TIME = 1;
+	const int WAIT_TIME = 1000;
 
 	sf::SoundBuffer sndBuffIntroduccion;
 	sf::Sound sndIntroduccion;

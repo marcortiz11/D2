@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <SFML/Audio.hpp>
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Torch.h"
@@ -68,6 +69,11 @@ private:
 	
 	Estado estado;
 	
+	sf::SoundBuffer sndBuff_perder;
+	sf::SoundBuffer sndBuff_ganar;
+
+	sf::Sound snd_ganar;
+	sf::Sound snd_perder;
 };
 
 

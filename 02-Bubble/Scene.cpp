@@ -74,6 +74,14 @@ void Scene::reload()
 
 	bDead = false;
 
+	for (auto gate : gates) {
+		delete gate;
+	}
+
+	for (auto button : buttons) {
+		delete button;
+	}
+
 	gates = vector<Gate*>();
 	buttons = vector<ActivationButton*>();
 
@@ -119,6 +127,17 @@ void Scene::init()
 	bShowMenu = true;
 
 	estado = Estado::MenuJuego;
+
+	bool cargar = true;
+	cargar = cargar && sndBuff_ganar.loadFromFile("sounds/final.wav");
+	cargar = cargar && sndBuff_perder.loadFromFile("sounds/perder.wav");
+	
+	if (!cargar) {
+		throw std::runtime_error("Error en la carga de sonidos de la Scena.");
+	}
+
+	snd_ganar.setBuffer(sndBuff_ganar);
+	snd_perder.setBuffer(sndBuff_perder);
 } 
 
 void Scene::update(int deltaTime)
@@ -133,6 +152,7 @@ void Scene::update(int deltaTime)
 		if (player->getLife() <= 0) {
 			estado = Estado::Muerto;
 			statusBar.setDead(true);
+			snd_perder.play();
 		}
 		updateEntities(deltaTime);
 		break;
