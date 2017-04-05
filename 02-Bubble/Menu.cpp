@@ -33,7 +33,6 @@ void Menu::init(ShaderProgram & shaderProgram)
 	sprite->setPosition(glm::vec2(0, 0));
 
 	screen = Screen::Jugar;
-	bRender = true;
 	waitTime = 0;
 
 	if (!sndBuffIntroduccion.loadFromFile("sounds/intro.wav")) {
@@ -43,7 +42,7 @@ void Menu::init(ShaderProgram & shaderProgram)
 	sndIntroduccion.play();
 }
 
-void Menu::update(int deltaTime)
+bool Menu::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 
@@ -62,7 +61,7 @@ void Menu::update(int deltaTime)
 				waitTime = WAIT_TIME;
 			}
 			else if (Game::instance().getKey(13)) { //Press enter
-				bRender = false;
+				return false;
 				sndIntroduccion.pause();
 			}
 			break;
@@ -112,11 +111,10 @@ void Menu::update(int deltaTime)
 	}
 
 	waitTime -= deltaTime;
+	return true;
 }
 
 void Menu::render()
 {
-	if (bRender) {
-		sprite->render();
-	}
+	sprite->render();
 }

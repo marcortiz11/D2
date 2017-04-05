@@ -46,7 +46,7 @@ void StatusBar::init(const glm::ivec2 & pos, ShaderProgram & shaderProgram)
 
 	elapsedTime = 3'600'000;
 
-
+	bDead = false;
 }
 
 void StatusBar::update(int deltaTime)
@@ -62,13 +62,18 @@ void StatusBar::render()
 	sprite->render();
 	glm::vec2 pos = sprite->getPosition();
 	
-	if (elapsedTime % 60000 >= 57000) {
-		int minutes = elapsedTime / 1000 / 60;
+	if (bDead) {
 		char str[16];
-		sprintf(str, "%d MINUTES LEFT", minutes + 1);
-		text.render(str, glm::vec2(400,609), 25, glm::vec4(1, 1, 1, 1));
+		sprintf(str, "YOU ARE DEAD");
+		text.render(str, glm::vec2(400, 609), 25, glm::vec4(1, 1, 1, 1));
+	} else {
+		if (elapsedTime % 60000 >= 57000) {
+			int minutes = elapsedTime / 1000 / 60;
+			char str[16];
+			sprintf(str, "%d MINUTES LEFT", minutes + 1);
+			text.render(str, glm::vec2(400, 609), 25, glm::vec4(1, 1, 1, 1));
+		}
 	}
-		
 }
 
 void StatusBar::setPosition(glm::vec2 pos)
@@ -110,4 +115,9 @@ void StatusBar::setLife(int live)
 		setLifeAnimation(THREE_LIVES);
 		break;
 	}
+}
+
+void StatusBar::setDead(bool b)
+{
+	bDead = b;
 }

@@ -23,10 +23,21 @@ Scene::~Scene()
 {
 	if(map != NULL)
 		delete map;
-	if(player != NULL)
-		delete player;
+	if (physicsMap != nullptr)
+		delete physicsMap;
 	if (frontMap != NULL)
 		delete frontMap;
+	if (torchMap != NULL)
+		delete torchMap;
+	if (doors != nullptr)
+		delete doors;
+	if (fallingFloor != nullptr)
+		delete fallingFloor;
+	if (trapsMap != nullptr)
+		delete trapsMap;
+	if(player != NULL)
+		delete player;
+
 	for (int i = 0; i < torches.size(); ++i) {
 		delete torches[i];
 	}
@@ -36,8 +47,38 @@ Scene::~Scene()
 	for (int i = 0; i < buttons.size(); i++) {
 		delete buttons[i];
 	}
+	for (int i = 0; i < enemies.size(); ++i) {
+		delete enemies[i];
+	}
 }
 
+void Scene::reload() 
+{
+	float mapTileSizeX = map->getTileSizeX();
+	float mapTileSizeY = map->getTileSizeY();
+
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
+	player->setPhysicsTileMap(physicsMap);
+	player->setFrontMap(frontMap);
+
+	enemies[0]->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	glm::vec2 enemyPos((INIT_PLAYER_X_TILES + 2) * mapTileSizeX, (INIT_PLAYER_Y_TILES + 2) * mapTileSizeY);
+	enemies[0]->setPosition(enemyPos);
+	enemies[0]->setPhysicsTileMap(physicsMap);
+
+	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+
+	statusBar.init(glm::ivec2(0, 0), texProgram);
+	menu.init(texProgram);
+
+	bDead = false;
+
+	gates = vector<Gate*>();
+	buttons = vector<ActivationButton*>();
+
+	initTraps(trapsMap);
+}
 
 void Scene::init()
 {
@@ -69,15 +110,44 @@ void Scene::init()
 	enemies.push_back(enemy);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-	currentTime = 0.0f;
 
 	statusBar.init(glm::ivec2(0,0), texProgram);
 	menu.init(texProgram);
+	bDead = false;
+	bShowMenu = true;
+
+	estado = Estado::MenuJuego;
 } 
 
 void Scene::update(int deltaTime)
 {
-	currentTime += deltaTime;
+	switch (estado) {
+	case Estado::MenuJuego:
+		if (!menu.update(deltaTime)) {
+			estado = Estado::Juego;
+		}
+		break;
+	case Estado::Juego:
+		if (player->getLife() <= 0) {
+			estado = Estado::Muerto;
+			statusBar.setDead(true);
+		}
+		updateEntities(deltaTime);
+		break;
+	case Estado::Muerto:
+		updateEntities(deltaTime);
+
+		if (Game::instance().getKey(13)) {
+			reload();
+			estado = Estado::Juego;
+			
+		}
+
+		break;
+	}	
+}
+
+void Scene::updateEntities(int deltaTime) {
 	player->update(deltaTime, enemies);
 	for (Enemy* e : enemies) {
 		e->update(deltaTime, *player);
@@ -87,7 +157,6 @@ void Scene::update(int deltaTime)
 	for (int i = 0; i < gates.size(); ++i) gates[i]->update(deltaTime, physicsMap);
 	statusBar.setLife(player->getLife());
 	statusBar.update(deltaTime);
-	menu.update(deltaTime);
 }
 
 void Scene::render()
@@ -135,7 +204,10 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	menu.render();
+
+	if (estado == Estado::MenuJuego) {
+		menu.render();
+	}
 }
 
 void Scene::initTorches(TileMap* torcheMap) {

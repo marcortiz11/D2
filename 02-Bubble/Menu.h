@@ -10,7 +10,7 @@ public:
 		Jugar, Instrucciones, Creditos, InstruccionesTexto, CreditoTexto
 	};
 	void init(ShaderProgram &shaderProgram);
-	void update(int deltaTime);
+	bool update(int deltaTime);
 	void render();
 
 private:
@@ -20,8 +20,6 @@ private:
 	Sprite *sprite;
 
 	Screen screen;
-
-	bool bRender;
 
 	int waitTime;
 	const int WAIT_TIME = 1;

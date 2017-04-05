@@ -21,6 +21,10 @@
 
 class Scene
 {
+public:
+	enum Estado {
+		MenuJuego, Juego, Muerto
+	};
 
 public:
 	Scene();
@@ -34,6 +38,8 @@ public:
 
 private:
 	void initShaders();
+	void reload();
+	void updateEntities(int deltaTime);
 
 private:
 	TileMap *map;
@@ -44,18 +50,24 @@ private:
 	TileMap *fallingFloor;
 	TileMap *trapsMap;
 	Player *player;
+	
 	vector<Torch*> torches;
+	vector<Gate*> gates;
+	vector<ActivationButton*> buttons;
+	vector<Enemy*> enemies;
+	
 	ShaderProgram texProgram;
-	float currentTime;
 	glm::mat4 projection;
 
 	StatusBar statusBar;
 
 	Menu menu;
 
-	vector<Enemy*> enemies;
-	vector<Gate*> gates;
-	vector<ActivationButton*> buttons;
+	bool bDead;
+	bool bShowMenu;
+	
+	Estado estado;
+	
 };
 
 

@@ -26,6 +26,8 @@ public:
 	void setLifeAnimation(Live live);
 	void setLife(int live);
 
+	void setDead(bool b);
+
 private:
 	glm::ivec2 tileMapDispl;
 	//glm::vec2 posTorch, targetPosTorch, direction;
@@ -34,7 +36,7 @@ private:
 	Text text;
 
 	int elapsedTime;
-
+	bool bDead;
 
 };
 
