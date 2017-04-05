@@ -78,6 +78,8 @@ void Scene::reload()
 	buttons = vector<ActivationButton*>();
 
 	initTraps(trapsMap);
+	physicsMap->reload();
+	frontMap->reload();
 }
 
 void Scene::init()

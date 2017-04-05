@@ -20,6 +20,12 @@ TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProg
 {
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
+	this->levelFile = levelFile;
+}
+
+void TileMap::reload()
+{
+	loadLevel(levelFile);
 }
 
 TileMap::~TileMap()

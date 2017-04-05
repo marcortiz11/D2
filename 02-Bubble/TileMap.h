@@ -43,11 +43,14 @@ public:
 	int getMapSizeX() { return mapSize.x; };
 	int getMapSizeY() { return mapSize.y; };
 
+	void reload();
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
 
 private:
+	string levelFile;
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
