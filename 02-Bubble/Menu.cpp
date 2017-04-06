@@ -41,10 +41,7 @@ void Menu::init(ShaderProgram & shaderProgram)
 	screen = Screen::Jugar;
 	waitTime = 0;
 
-	if (!sndBuffIntroduccion.loadFromFile("sounds/intro.wav")) {
-		throw std::runtime_error("Error al cargar el fichero de sonido");
-	}
-	sndIntroduccion.setBuffer(sndBuffIntroduccion);
+	sndIntroduccion.setBuffer(SoundManager::instance().get("intro"));
 	sndIntroduccion.play();
 }
 

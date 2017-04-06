@@ -268,22 +268,13 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bMoving = false;
 	life = 3;
 
-	bool carga = true;
-	carga = carga && sndBuff_danoEspada.loadFromFile("sounds/danoEspada.wav");
-	carga = carga && sndBuff_danoPropio.loadFromFile("sounds/danoPropio.wav");
-	carga = carga && sndBuff_golpeAire.loadFromFile("sounds/espadaAlAire.wav");
-	carga = carga && sndBuff_desenfundar.loadFromFile("sounds/desenfundarEspada.wav");
-	carga = carga && sndBuff_beberVida.loadFromFile("sounds/restaurarVida.wav");
+	SoundManager& sm = SoundManager::instance();
 
-	if (!carga) {
-		throw std::runtime_error("Error al cargar algun sonido.");
-	}
-
-	snd_danoEspada.setBuffer(sndBuff_danoEspada);
-	snd_danoPropio.setBuffer(sndBuff_danoPropio);
-	snd_golpeAire.setBuffer(sndBuff_golpeAire);
-	snd_desenfundar.setBuffer(sndBuff_desenfundar);
-	snd_beberVida.setBuffer(sndBuff_beberVida);
+	snd_danoEspada.setBuffer(sm.get("danoEspada"));
+	snd_danoPropio.setBuffer(sm.get("danoPropio"));
+	snd_golpeAire.setBuffer(sm.get("golpeAire"));
+	snd_desenfundar.setBuffer(sm.get("desenfundar"));
+	snd_beberVida.setBuffer(sm.get("beberVida"));
 
 }
 

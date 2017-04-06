@@ -51,9 +51,6 @@ private:
 
 	Estado estado;
 
-	sf::SoundBuffer sndBuff_dano;
-	sf::SoundBuffer sndBuff_espadaAire;
-
 	int life;
 
 	int waitAtack;

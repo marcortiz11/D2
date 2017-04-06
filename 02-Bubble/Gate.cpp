@@ -39,8 +39,7 @@ void Gate::init(ActivationButton *button, const glm::ivec2 &tileMapPos, ShaderPr
 	this->tileMapPos = tileMapPos;
 	b = button;
 
-	sndBuff_puerta.loadFromFile("sounds/puerta2.wav");
-	snd_puerta.setBuffer(sndBuff_puerta);
+	snd_puerta.setBuffer(SoundManager::instance().get("puerta"));
 }
 
 void Gate::update(int deltaTime, TileMap* pyisics)

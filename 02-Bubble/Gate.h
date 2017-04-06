@@ -27,7 +27,6 @@ private:
 
 	glm::ivec2 tileMapPos;
 
-	sf::SoundBuffer sndBuff_puerta;
 	sf::Sound snd_puerta;
 };
 

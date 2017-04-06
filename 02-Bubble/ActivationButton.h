@@ -23,7 +23,6 @@ private:
 	int TILEX, TILEY;
 	int state = 0;
 
-	sf::SoundBuffer sndBuff_boton;
 	sf::Sound snd_boton;
 };
 

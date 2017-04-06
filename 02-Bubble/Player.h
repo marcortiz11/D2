@@ -68,11 +68,6 @@ private:
 	bool bBeaten;
 
 
-	sf::SoundBuffer sndBuff_danoEspada;
-	sf::SoundBuffer sndBuff_danoPropio;
-	sf::SoundBuffer sndBuff_golpeAire;
-	sf::SoundBuffer sndBuff_desenfundar;
-	sf::SoundBuffer sndBuff_beberVida;
 	sf::Sound snd_danoEspada;
 	sf::Sound snd_danoPropio;
 	sf::Sound snd_golpeAire;

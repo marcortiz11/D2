@@ -128,16 +128,11 @@ void Scene::init()
 
 	estado = Estado::MenuJuego;
 
-	bool cargar = true;
-	cargar = cargar && sndBuff_ganar.loadFromFile("sounds/final.wav");
-	cargar = cargar && sndBuff_perder.loadFromFile("sounds/perder.wav");
 	
-	if (!cargar) {
-		throw std::runtime_error("Error en la carga de sonidos de la Scena.");
-	}
-
-	snd_ganar.setBuffer(sndBuff_ganar);
-	snd_perder.setBuffer(sndBuff_perder);
+	SoundManager& sm = SoundManager::instance();
+	
+	snd_ganar.setBuffer(sm.get("ganar"));
+	snd_perder.setBuffer(sm.get("perder"));
 } 
 
 void Scene::update(int deltaTime)

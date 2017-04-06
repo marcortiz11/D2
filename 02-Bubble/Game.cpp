@@ -7,6 +7,19 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+
+	SoundManager& sm = SoundManager::instance();
+	sm.add("danoEspada", "sounds/danoEspada.wav");
+	sm.add("danoPropio", "sounds/danoPropio.wav");
+	sm.add("golpeAire", "sounds/espadaAlAire.wav");
+	sm.add("desenfundar", "sounds/desenfundarEspada.wav");
+	sm.add("beberVida", "sounds/restaurarVida.wav");
+	sm.add("boton", "sounds/boton.wav");
+	sm.add("intro", "sounds/intro.wav");
+	sm.add("puerta", "sounds/puerta2.wav");
+	sm.add("ganar", "sounds/final.wav");
+	sm.add("perder", "sounds/perder.wav");
+
 	scene.init();
 }
 

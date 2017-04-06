@@ -25,7 +25,6 @@ private:
 	int waitTime;
 	const int WAIT_TIME = 1000;
 
-	sf::SoundBuffer sndBuffIntroduccion;
 	sf::Sound sndIntroduccion;
 };
 

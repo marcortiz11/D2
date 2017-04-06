@@ -32,8 +32,8 @@ void ActivationButton::init(TileMap* t, const glm::ivec2 &tileMapPos, ShaderProg
 	TILEY = tileMapPos.y / t->getTileSizeY();
 	map = t;
 	sprite->setPosition(glm::vec2(tileMapPos.x, tileMapPos.y));
-	sndBuff_boton.loadFromFile("sounds/boton.wav");
-	snd_boton.setBuffer(sndBuff_boton);
+	
+	snd_boton.setBuffer(SoundManager::instance().get("boton"));
 }
 
 void ActivationButton::update(int deltaTime, const glm::ivec2 &posPlayer)
