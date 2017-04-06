@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "SFML/Audio.hpp"
 
 class Player;
 
@@ -49,6 +50,9 @@ private:
 	glm::ivec2 drawAdjustment;
 
 	Estado estado;
+
+	sf::SoundBuffer sndBuff_dano;
+	sf::SoundBuffer sndBuff_espadaAire;
 
 	int life;
 

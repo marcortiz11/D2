@@ -320,7 +320,7 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 	case Estado::AtackWalk:
 		direction = glm::normalize(targetPosPlayer - posPlayer);
 
-		posPlayer += direction*0.4f;
+		posPlayer += direction*0.8f;
 
 		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
 			posPlayer = targetPosPlayer;

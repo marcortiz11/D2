@@ -238,6 +238,8 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	bAtacking = false;
 	estado = Estado::Falling;
 	life = 3;
+
+	
 }
 
 void Enemy::update(int deltaTime, Player& player)
@@ -358,7 +360,7 @@ void Enemy::update(int deltaTime, Player& player)
 	case Estado::SlowWalking:
 		direction = glm::normalize(targetPosEnemy - posEnemy);
 
-		posEnemy += direction*0.4f;
+		posEnemy += direction*0.8f;
 
 		if (glm::distance(targetPosEnemy, posEnemy) <= 1.5f) {
 			posEnemy = targetPosEnemy;
