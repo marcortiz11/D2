@@ -57,15 +57,10 @@ void Scene::reload()
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
 
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
-	player->setPhysicsTileMap(physicsMap);
-	player->setFrontMap(frontMap);
-
-	enemies[0]->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->reload(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
+	
 	glm::vec2 enemyPos((INIT_PLAYER_X_TILES + 2) * mapTileSizeX, (INIT_PLAYER_Y_TILES + 2) * mapTileSizeY);
-	enemies[0]->setPosition(enemyPos);
-	enemies[0]->setPhysicsTileMap(physicsMap);
+	enemies[0]->reload(enemyPos);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 

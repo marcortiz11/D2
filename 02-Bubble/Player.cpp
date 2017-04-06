@@ -10,6 +10,8 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 7
 
+
+
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	estado = Estado::Falling;
@@ -276,6 +278,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	snd_desenfundar.setBuffer(sm.get("desenfundar"));
 	snd_beberVida.setBuffer(sm.get("beberVida"));
 
+}
+
+void Player::reload(const glm::ivec2 & position)
+{
+	estado = Estado::Falling;
+	sprite->changeAnimation(0);
+	setPosition(position);
+	
+	direction = glm::vec2(1.0f, 0.0f);
+
+	bMoving = false;
+	life = 3;
 }
 
 glm::vec2 Player::getPosition()

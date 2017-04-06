@@ -242,6 +242,19 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	
 }
 
+void Enemy::reload(const glm::ivec2 & position)
+{
+	sprite->changeAnimation(0);
+
+	setPosition(position);
+	direction = glm::vec2(1.0f, 0.0f);
+
+	bMoving = false;
+	bAtacking = false;
+	estado = Estado::Falling;
+	life = 3;
+}
+
 void Enemy::update(int deltaTime, Player& player)
 {
 	sprite->update(deltaTime);

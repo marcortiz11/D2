@@ -27,6 +27,7 @@ public:
 
 public:
 	void init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void reload(const glm::ivec2& tileMapPos);
 	void update(int deltaTime, Player& player);
 	void render();
 
