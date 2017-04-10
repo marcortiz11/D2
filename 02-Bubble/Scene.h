@@ -11,6 +11,7 @@
 #include "StatusBar.h"
 #include "Menu.h"
 #include "Enemy.h"
+#include "Guillotina.h"
 
 #include "Gate.h"
 #include "ActivationButton.h"
@@ -34,6 +35,7 @@ public:
 	void init();
 	void initTorches(TileMap* torcheMap);
 	void initTraps(TileMap* trapMap);
+	void initEnemies(TileMap *enemies);
 	void update(int deltaTime);
 	void render();
 
@@ -50,11 +52,13 @@ private:
 	TileMap *doors;
 	TileMap *fallingFloor;
 	TileMap *trapsMap;
+	TileMap *enemyMap;
 	Player *player;
 	
 	vector<Torch*> torches;
 	vector<Gate*> gates;
 	vector<ActivationButton*> buttons;
+	vector<Guillotina*> guillotinas;
 	vector<Enemy*> enemies;
 	
 	ShaderProgram texProgram;
