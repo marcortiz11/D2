@@ -413,9 +413,9 @@ glm::vec2 Enemy::getPosition() const
 	return posEnemy;
 }
 
-bool Enemy::beaten()
+bool Enemy::beaten(int damage)
 {
-	life -= 1;
+	life -= damage;
 	return true;
 }
 

@@ -35,7 +35,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition() const;
 
-	bool beaten();
+	bool beaten(int damage);
 	int getLife();
 	int getMaxLife();
 

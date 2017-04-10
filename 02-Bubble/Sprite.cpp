@@ -35,6 +35,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	shaderProgram = program;
 	currentAnimation = -1;
 	position = glm::vec2(0.f);
+	scaleFactor = 1.0f;
 }
 
 void Sprite::update(int deltaTime)
@@ -62,7 +63,7 @@ void Sprite::render() const
 {
 	glm::mat4 modelview = glm::mat4(1.0f);
 	modelview = glm::translate(modelview, glm::vec3(position.x, position.y, 0.f));
-
+	modelview = glm::scale(modelview, glm::vec3(scaleFactor, scaleFactor, 1));
 	
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
@@ -137,5 +138,10 @@ bool Sprite::flipY() {
 glm::vec2 Sprite::getPosition()
 {
 	return position;
+}
+
+void Sprite::setScaleFactor(float factor)
+{
+	scaleFactor = factor;
 }
 
