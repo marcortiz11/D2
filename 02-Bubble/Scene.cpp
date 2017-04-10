@@ -255,24 +255,25 @@ void Scene::initTraps(TileMap* trapsMap) {
 	int elems = cols * rows;
 	int i = 0;
 	while (i < elems) {
-		//Hemos encontrado un activador
-		if (matrix[i] == 1) {
+		//Index parells = botons
+		if (matrix[i]%2 && matrix[i]!=50) {
 			ActivationButton* b = new ActivationButton();
 			b->init(map, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
 			buttons.push_back(b);
-			++i;
-			while (i<elems && matrix[i] != 1) {
-				if (matrix[i] == 2) {
-					Gate* g = new Gate();
-					g->init(b, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
-					gates.push_back(g);
-				}
-				++i;
-			}
-			--i;
 		}
-		else if (matrix[i] == 3) {
-			//Trampa2
+		//Index imparells = portes.
+		else if (matrix[i]+1 % 2) {
+			int boto_ref = (matrix[i] - 1) - 1;
+			if (buttons.size() > boto_ref) {
+				//TODO: Dibuixar en front map el pal de la porta de dabant
+				Gate* g = new Gate();
+				g->init(buttons[boto_ref], glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
+				gates.push_back(g);
+			}
+		}
+		//Trampa 2 amb id = 50
+		else if (matrix[i] == 50) {
+			
 		}
 		++i;
 	}
