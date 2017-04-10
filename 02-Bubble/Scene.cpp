@@ -8,8 +8,8 @@
 #define SCREEN_X 32
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 0
-#define INIT_PLAYER_Y_TILES 0
+#define INIT_PLAYER_X_TILES 3
+#define INIT_PLAYER_Y_TILES 1
 
 
 Scene::Scene()
@@ -50,6 +50,9 @@ Scene::~Scene()
 	for (int i = 0; i < enemies.size(); ++i) {
 		delete enemies[i];
 	}
+	for (int i = 0; i < guillotinas.size(); ++i) {
+		delete guillotinas[i];
+	}
 }
 
 void Scene::reload() 
@@ -58,7 +61,7 @@ void Scene::reload()
 	float mapTileSizeY = map->getTileSizeY();
 
 	player->reload(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
-
+	
 	//Fa falta carregar mapa enemics
 	glm::vec2 enemyPos((23) * mapTileSizeX, (1) * mapTileSizeY);
 	enemies[0]->reload(enemyPos);
@@ -78,8 +81,13 @@ void Scene::reload()
 		delete button;
 	}
 
+	for (auto guillotina : guillotinas) {
+		delete guillotina;
+	}
+
 	gates = vector<Gate*>();
 	buttons = vector<ActivationButton*>();
+	guillotinas = vector<Guillotina*>();
 
 	initTraps(trapsMap);
 	physicsMap->reload();
@@ -90,13 +98,14 @@ void Scene::reload()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	physicsMap = TileMap::createTileMap("levels/level05.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
-	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	trapsMap = TileMap::createTileMap("levels/trap05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram); //Mapa para diferentes tipos de trampas
+	map = TileMap::createTileMap("levels/level06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	physicsMap = TileMap::createTileMap("levels/level06.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	frontMap = TileMap::createTileMap("levels/front06.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
+	torchMap = TileMap::createTileMap("levels/torches06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	trapsMap = TileMap::createTileMap("levels/trap06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	enemyMap = TileMap::createTileMap("levels/enemies06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
-	initTorches(torchMap);
+	initTorches(torchMap); 
 	initTraps(trapsMap);
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
@@ -107,20 +116,12 @@ void Scene::init()
 	player->setPhysicsTileMap(physicsMap);
 	player->setFrontMap(frontMap);
 
-
-	Enemy* enemy = new Enemy();
-	enemy->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	glm::vec2 enemyPos((INIT_PLAYER_X_TILES + 2) * mapTileSizeX, (INIT_PLAYER_Y_TILES+2) * mapTileSizeY);
-	enemy->setPosition(enemyPos);
-	enemy->setPhysicsTileMap(physicsMap);
-
-	enemies.push_back(enemy);
+	//Init the enemy based on template
+	initEnemies(enemyMap);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
 	statusBar.init(glm::ivec2(0,0), texProgram);
-	statusBar.setPlayer(player);
-
 	menu.init(texProgram);
 	bDead = false;
 	bShowMenu = true;
@@ -172,7 +173,8 @@ void Scene::updateEntities(int deltaTime) {
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
 	for (int i = 0; i < buttons.size(); ++i) buttons[i]->update(deltaTime, player->getPosition());
 	for (int i = 0; i < gates.size(); ++i) gates[i]->update(deltaTime, physicsMap);
-	
+	for (int i = 0; i < guillotinas.size(); ++i) guillotinas[i]->update(deltaTime, player);
+	statusBar.setLife(player->getLife());
 	statusBar.update(deltaTime);
 }
 
@@ -200,6 +202,7 @@ void Scene::render()
 	for (int i = 0; i < torches.size(); ++i) torches[i]->render();
 	for (int i = 0; i < buttons.size(); ++i) buttons[i]->render();
 	for (int i = 0; i < gates.size(); ++i) gates[i]->render();
+	for (int i = 0; i < guillotinas.size(); ++i) guillotinas[i]->render();
 
 	player->render();
 	for (Enemy* e : enemies) {
@@ -238,7 +241,7 @@ void Scene::initTorches(TileMap* torcheMap) {
 
 	for (int j = 0; j < rows; ++j) {
 		for (int i = 0; i < cols; ++i) {
-			if (map[j*cols + i] == 1) {
+			if (map[j*cols + i]) {
 				const glm::ivec2 Coords = glm::ivec2(i*tileSizeX, j*tileSizeY);
 				Torch* torch = new Torch();
 				torch->init(Coords, texProgram);
@@ -260,26 +263,52 @@ void Scene::initTraps(TileMap* trapsMap) {
 	int elems = cols * rows;
 	int i = 0;
 	while (i < elems) {
-		//Hemos encontrado un activador
-		if (matrix[i] == 1) {
+		//Index parells = botons
+		if (matrix[i]%2) {
 			ActivationButton* b = new ActivationButton();
 			b->init(map, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
 			buttons.push_back(b);
-			++i;
-			while (i<elems && matrix[i] != 1) {
-				if (matrix[i] == 2) {
-					Gate* g = new Gate();
-					g->init(b, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
-					gates.push_back(g);
-				}
-				++i;
-			}
-			--i;
 		}
-		else if (matrix[i] == 3) {
-			//Trampa2
+		//Index imparells = portes.
+		else if (matrix[i]+1 % 2 && matrix[i] != 50) {
+			int boto_ref = (matrix[i] - 1) - 1;
+			if (buttons.size() > boto_ref) {
+				//TODO: Dibuixar en front map el pal de la porta de dabant
+				Gate* g = new Gate();
+				g->init(buttons[boto_ref], glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
+				gates.push_back(g);
+			}
+		}
+		//Trampa 2 amb id = 50
+		else if (matrix[i] == 50) {
+			Guillotina *g = new Guillotina();
+			g->init(glm::vec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), map, texProgram);
+			guillotinas.push_back(g);
 		}
 		++i;
+	}
+}
+
+void Scene::initEnemies(TileMap *eMap) {
+
+	int* map = eMap->getTileMap();
+	int rows = eMap->getMapSizeY();
+	int cols = eMap->getMapSizeX();
+
+	int tileSizeX = eMap->getTileSizeX();
+	int tileSizeY = eMap->getTileSizeY();
+
+	for (int j = 0; j < rows; ++j) {
+		for (int i = 0; i < cols; ++i) {
+			if (map[j*cols + i]) {
+				Enemy* enemy = new Enemy();
+				enemy->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				glm::vec2 enemyPos(i * tileSizeX, j * tileSizeY);
+				enemy->setPosition(enemyPos);
+				enemy->setPhysicsTileMap(physicsMap);
+				enemies.push_back(enemy);
+			}
+		}
 	}
 }
 

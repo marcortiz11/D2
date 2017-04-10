@@ -47,9 +47,6 @@ void Sprite::update(int deltaTime)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
 			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
-			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && currentKeyframe == 6) {
-				currentKeyframe = 0;
-			}
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
 	}

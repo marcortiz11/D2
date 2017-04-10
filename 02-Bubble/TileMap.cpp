@@ -16,11 +16,11 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 }
 
 
-TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
+TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program) :shaderProgram(program)
 {
 	loadLevel(levelFile);
-	prepareArrays(minCoords, program);
 	this->levelFile = levelFile;
+	prepareArrays();
 }
 
 void TileMap::reload()
@@ -112,7 +112,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	return true;
 }
 
-void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
+void TileMap::prepareArrays()
 {
 	int tile, nTiles = 0;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
@@ -129,14 +129,15 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				// Non-empty tile
 				nTiles++;
 
-				//posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
 				posTile = glm::vec2(i * blockSize.x, j * blockSize.y);
+
 				float cx = (tile-1) / tilesheetSize.x; //+1
 				float cy = (tile-1) % tilesheetSize.x; //-1
+
 				texCoordTile[0] = glm::vec2(cy / float(tilesheetSize.x), cx / float(tilesheetSize.y));
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
-				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
+
 				// First triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
@@ -144,6 +145,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[0].y);
 				vertices.push_back(posTile.x + 32.f); vertices.push_back(posTile.y + 63.f);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
+
 				// Second triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
@@ -160,8 +162,8 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, 24 * nTiles * sizeof(float), &vertices[0], GL_STATIC_DRAW);
-	posLocation = program.bindVertexAttribute("position", 2, 4*sizeof(float), 0);
-	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
+	posLocation = shaderProgram.bindVertexAttribute("position", 2, 4*sizeof(float), 0);
+	texCoordLocation = shaderProgram.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
 // Collision tests for axis aligned bounding boxes.
@@ -187,6 +189,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 
 void TileMap::clearPath(glm::ivec2 pos) {
 	map[pos.y*mapSize.x + pos.x] = 0;
+	prepareArrays(); //Carreguem un altre cop el mapa
 
 }
 

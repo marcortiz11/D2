@@ -38,7 +38,6 @@ void Gate::init(ActivationButton *button, const glm::ivec2 &tileMapPos, ShaderPr
 	sprite->setPosition( glm::vec2(tileMapPos.x, tileMapPos.y) );
 	this->tileMapPos = tileMapPos;
 	b = button;
-
 	snd_puerta.setBuffer(SoundManager::instance().get("puerta"));
 }
 

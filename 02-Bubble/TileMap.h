@@ -47,7 +47,7 @@ public:
 
 private:
 	bool loadLevel(const string &levelFile);
-	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	void prepareArrays();
 
 private:
 	string levelFile;
@@ -58,6 +58,7 @@ private:
 	glm::fvec2 blockSize, tileSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
+	ShaderProgram &shaderProgram;
 	int *map;
 
 };
