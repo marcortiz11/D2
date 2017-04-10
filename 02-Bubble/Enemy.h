@@ -37,6 +37,7 @@ public:
 
 	bool beaten();
 	int getLife();
+	int getMaxLife();
 
 private:
 	bool bJumping, bMoving;
@@ -53,6 +54,7 @@ private:
 	Estado estado;
 
 	int life;
+	int maxLife;
 
 	int waitAtack;
 	int timeToBeReady;

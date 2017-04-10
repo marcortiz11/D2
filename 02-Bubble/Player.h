@@ -28,6 +28,9 @@ public:
 
 	bool beaten();
 	int getLife();
+	int getMaxLife();
+
+	Enemy* getTarget();
 
 	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing,
 		Bend, Fighting, Atacking, AtackWalk, Drinking
@@ -61,6 +64,7 @@ private:
 	Enemy* target;
 
 	int life;
+	int maxLife;
 
 	int waitAtack;
 	int timeToBeReady;

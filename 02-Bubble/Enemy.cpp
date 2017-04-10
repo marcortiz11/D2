@@ -238,6 +238,7 @@ void Enemy::init(Type type, const glm::ivec2 &tileMapPos, ShaderProgram & shader
 	bAtacking = false;
 	estado = Estado::Falling;
 	life = 3;
+	maxLife = 3;
 
 	
 }
@@ -421,4 +422,9 @@ bool Enemy::beaten()
 int Enemy::getLife()
 {
 	return life;
+}
+
+int Enemy::getMaxLife()
+{
+	return maxLife;
 }

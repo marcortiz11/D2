@@ -9,6 +9,14 @@ StatusBar::StatusBar()
 
 StatusBar::~StatusBar()
 {
+	delete sprite;
+}
+
+void StatusBar::reload() 
+{
+	sprite->changeAnimation(0);
+	elapsedTime = 3'600'000;
+	bDead = false;
 }
 
 void StatusBar::init(const glm::ivec2 & pos, ShaderProgram & shaderProgram)
@@ -19,49 +27,118 @@ void StatusBar::init(const glm::ivec2 & pos, ShaderProgram & shaderProgram)
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		throw std::runtime_error("Could not load font!!!");
 
-	spritesheet.loadFromFile("images/vida.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile("images/backgroundVida.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
+
 	double widthAnim = 1;
-	double heightAnim = 1.0/4.0;
+	double heightAnim = 1.0/1.0;
 
 	sprite = Sprite::createSprite(glm::ivec2(320, 8), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(4);
-
-
+	sprite->setNumberAnimations(1);
 	sprite->setAnimationSpeed(THREE_LIVES, 1);
 	sprite->addKeyframe(THREE_LIVES, glm::vec2(0 * widthAnim, 0*heightAnim));
-
-	sprite->setAnimationSpeed(TWO_LIVES, 1);
-	sprite->addKeyframe(TWO_LIVES, glm::vec2(0 * widthAnim, 1*heightAnim));
-
-	sprite->setAnimationSpeed(ONE_LIVE, 1);
-	sprite->addKeyframe(ONE_LIVE, glm::vec2(0 * widthAnim, 2*heightAnim));
-
-	sprite->setAnimationSpeed(DEAD, 1);
-	sprite->addKeyframe(DEAD, glm::vec2(0 * widthAnim, 3 * heightAnim));
-
-	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(0,189-8));
 
-	elapsedTime = 3'600'000;
+	liveSpritesheet.loadFromFile("images/corazon.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	liveSpritesheet.setMinFilter(GL_NEAREST);
+	liveSpritesheet.setMagFilter(GL_NEAREST);
 
-	bDead = false;
+	widthAnim = 1.0 / 2.0;
+	heightAnim = 1.0 / 1.0f;
+
+	spriteVida = Sprite::createSprite(glm::ivec2(6, 5), glm::vec2(widthAnim, heightAnim), &liveSpritesheet, &shaderProgram);
+	spriteVida->setNumberAnimations(2);
+	
+	spriteVida->setAnimationSpeed(LIVE_FILLED, 1);
+	spriteVida->addKeyframe(LIVE_FILLED, glm::vec2(0 * widthAnim, 0 * heightAnim));
+
+	spriteVida->setAnimationSpeed(LIVE_EMPTY, 1);
+	spriteVida->addKeyframe(LIVE_EMPTY, glm::vec2(1 * widthAnim, 0 * heightAnim));
+
+	spriteVida->setPosition(glm::vec2(40, 60));
+
+
+	liveEnemigoSpritesheet.loadFromFile("images/corazonEnemigo.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	liveEnemigoSpritesheet.setMinFilter(GL_NEAREST);
+	liveEnemigoSpritesheet.setMagFilter(GL_NEAREST);
+
+	widthAnim = 1.0 / 2.0;
+	heightAnim = 1.0 / 1.0f;
+
+	spriteVidaEnemigo = Sprite::createSprite(glm::ivec2(6, 5), glm::vec2(widthAnim, heightAnim), &liveEnemigoSpritesheet, &shaderProgram);
+	spriteVidaEnemigo->setNumberAnimations(2);
+
+	spriteVidaEnemigo->setAnimationSpeed(LIVE_FILLED, 1);
+	spriteVidaEnemigo->addKeyframe(LIVE_FILLED, glm::vec2(0 * widthAnim, 0 * heightAnim));
+
+	spriteVidaEnemigo->setAnimationSpeed(LIVE_EMPTY, 1);
+	spriteVidaEnemigo->addKeyframe(LIVE_EMPTY, glm::vec2(1 * widthAnim, 0 * heightAnim));
+
+	spriteVidaEnemigo->setPosition(glm::vec2(200, 60));
+
+	reload();
 }
 
 void StatusBar::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	elapsedTime -= deltaTime;
-
+	spriteVida->update(deltaTime);
 
 }
 
 void StatusBar::render() 
 {
 	sprite->render();
-	glm::vec2 pos = sprite->getPosition();
 	
+	glm::vec2 pos = position;
+	
+	if (player != nullptr) {
+		pos.y += 1;
+		pos.x += 1;
+
+		spriteVida->setPosition(pos);
+		spriteVida->changeAnimation(LIVE_FILLED);
+
+		for (int i = 0; i < player->getLife(); ++i) {
+			spriteVida->render();
+			pos.x += 8;
+			spriteVida->setPosition(pos);
+		}
+
+		spriteVida->changeAnimation(LIVE_EMPTY);
+		for (int i = 0; i < player->getMaxLife() - player->getLife(); ++i) {
+			spriteVida->render();
+			pos.x += 8;
+			spriteVida->setPosition(pos);
+		}
+	}
+
+	pos = position;
+	Enemy* enemy = player->getTarget();
+	if (enemy != nullptr) {
+		pos.x += 320 - enemy->getMaxLife() * 8;
+		pos.y += 1;
+
+		spriteVidaEnemigo->setPosition(pos);
+		spriteVidaEnemigo->changeAnimation(LIVE_FILLED);
+
+		for (int i = 0; i < enemy->getLife(); ++i) {
+			spriteVidaEnemigo->render();
+			pos.x += 8;
+			spriteVidaEnemigo->setPosition(pos);
+		}
+
+		spriteVidaEnemigo->changeAnimation(LIVE_EMPTY);
+		for (int i = 0; i < enemy->getMaxLife() - enemy->getLife(); ++i) {
+			spriteVidaEnemigo->render();
+			pos.x += 8;
+			spriteVidaEnemigo->setPosition(pos);
+		}
+	}
+	
+
 	if (bDead) {
 		char str[16];
 		sprintf(str, "YOU ARE DEAD");
@@ -78,44 +155,15 @@ void StatusBar::render()
 
 void StatusBar::setPosition(glm::vec2 pos)
 {
-	sprite->setPosition(glm::vec2(pos.x, pos.y+181));
+	this->position = glm::vec2(pos.x, pos.y + 181);
+	sprite->setPosition(position);
 }
 
-void StatusBar::setLifeAnimation(Live live)
+void StatusBar::setPlayer(Player * player)
 {
-	switch (live) {
-	case THREE_LIVES:
-		sprite->changeAnimation(0);
-		break;
-	case TWO_LIVES:
-		sprite->changeAnimation(1);
-		break;
-	case ONE_LIVE:
-		sprite->changeAnimation(2);
-		break;
-	case DEAD:
-		sprite->changeAnimation(3);
-		break;
-	}
+	this->player = player;
 }
 
-void StatusBar::setLife(int live)
-{
-	switch (live) {
-	case 0:
-		setLifeAnimation(DEAD);
-		break;
-	case 1:
-		setLifeAnimation(ONE_LIVE);
-		break;
-	case 2:
-		setLifeAnimation(TWO_LIVES);
-		break;
-	case 3:
-		setLifeAnimation(THREE_LIVES);
-		break;
-	}
-}
 
 void StatusBar::setDead(bool b)
 {

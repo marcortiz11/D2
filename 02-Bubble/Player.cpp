@@ -269,6 +269,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	bMoving = false;
 	life = 3;
+	maxLife = 3;
 
 	SoundManager& sm = SoundManager::instance();
 
@@ -277,7 +278,6 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	snd_golpeAire.setBuffer(sm.get("golpeAire"));
 	snd_desenfundar.setBuffer(sm.get("desenfundar"));
 	snd_beberVida.setBuffer(sm.get("beberVida"));
-
 }
 
 void Player::reload(const glm::ivec2 & position)
@@ -300,6 +300,16 @@ glm::vec2 Player::getPosition()
 int Player::getLife()
 {
 	return life;
+}
+
+int Player::getMaxLife()
+{
+	return maxLife;
+}
+
+Enemy * Player::getTarget()
+{
+	return target;
 }
 
 bool Player::beaten()
@@ -464,6 +474,7 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 			sprite->changeAnimation(STAND_LEFT);
 		}
 
+		target = nullptr;
 		for (auto& e : enemies) {
 			if (e->getLife() > 0 && posPlayer.y == e->getPosition().y) {
 				enemyInSight = true;

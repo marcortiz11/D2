@@ -117,6 +117,8 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
 	statusBar.init(glm::ivec2(0,0), texProgram);
+	statusBar.setPlayer(player);
+
 	menu.init(texProgram);
 	bDead = false;
 	bShowMenu = true;
@@ -167,7 +169,7 @@ void Scene::updateEntities(int deltaTime) {
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
 	for (int i = 0; i < buttons.size(); ++i) buttons[i]->update(deltaTime, player->getPosition());
 	for (int i = 0; i < gates.size(); ++i) gates[i]->update(deltaTime, physicsMap);
-	statusBar.setLife(player->getLife());
+	
 	statusBar.update(deltaTime);
 }
 
