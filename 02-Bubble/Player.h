@@ -26,8 +26,16 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 
+	void estado_Stopped(int deltaTime, vector<Enemy*>& enemies);
+	void estado_AtackWalk(int deltaTime);
+	void estado_Atacking(int deltaTime);
+	void estado_Fighting(int deltaTime);
+
 	bool beaten();
 	int getLife();
+	int getMaxLife();
+
+	Enemy* getTarget();
 
 	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing,
 		Bend, Fighting, Atacking, AtackWalk, Drinking
@@ -54,19 +62,25 @@ private:
 	TileMap *frontMap;
 
 	glm::ivec2 colisionBox;
-	glm::ivec2 drawAdjustment;
+	glm::vec2 defaultDrawAdjustment;
+	glm::vec2 drawAdjustment;
 
 	Estado estado;
 
 	Enemy* target;
 
 	int life;
+	int maxLife;
+	int damage;
 
+	// Times
 	int waitAtack;
 	int timeToBeReady;
+	int superTime;
 
 	bool bAtacking;
 	bool bBeaten;
+	bool bSuper;
 
 
 	sf::Sound snd_danoEspada;

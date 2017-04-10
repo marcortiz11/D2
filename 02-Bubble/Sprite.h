@@ -40,6 +40,8 @@ public:
 
 	glm::vec2 getPosition();
 
+	void setScaleFactor(float factor);
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
@@ -53,6 +55,7 @@ private:
 	vector<AnimKeyframes> animations;
 
 	bool bFlipY = false;
+	float scaleFactor;
 };
 
 

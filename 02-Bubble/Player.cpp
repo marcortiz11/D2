@@ -10,8 +10,6 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 7
 
-
-
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	estado = Estado::Falling;
@@ -264,11 +262,15 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	setPosition(glm::vec2(400, 140));
 	colisionBox = glm::ivec2(12, 44);
-	drawAdjustment = glm::ivec2(45, 40);
+	defaultDrawAdjustment = glm::vec2(45, 40);
+	drawAdjustment = defaultDrawAdjustment;
 	direction = glm::vec2(1.0f, 0.0f);
 
 	bMoving = false;
+	bSuper = false;
 	life = 3;
+	maxLife = 3;
+	damage = 1;
 
 	SoundManager& sm = SoundManager::instance();
 
@@ -277,7 +279,6 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	snd_golpeAire.setBuffer(sm.get("golpeAire"));
 	snd_desenfundar.setBuffer(sm.get("desenfundar"));
 	snd_beberVida.setBuffer(sm.get("beberVida"));
-
 }
 
 void Player::reload(const glm::ivec2 & position)
@@ -302,6 +303,16 @@ int Player::getLife()
 	return life;
 }
 
+int Player::getMaxLife()
+{
+	return maxLife;
+}
+
+Enemy * Player::getTarget()
+{
+	return target;
+}
+
 bool Player::beaten()
 {
 	life -= 1;
@@ -309,277 +320,316 @@ bool Player::beaten()
 	return true;
 }
 
+void Player::estado_Stopped(int deltaTime, vector<Enemy*>& enemies) 
+{
+	bool enemyInSight = false;
+	glm::ivec2 tilePosPlayer = frontMap->getTilePos(posPlayer);
+
+	if (direction.x >= 0) {
+		sprite->changeAnimation(STAND_RIGHT);
+	}
+	else {
+		sprite->changeAnimation(STAND_LEFT);
+	}
+
+	target = nullptr;
+	for (auto& e : enemies) {
+		if (e->getLife() > 0 && posPlayer.y == e->getPosition().y) {
+			enemyInSight = true;
+			target = e;
+		}
+	}
+
+	if (enemyInSight) {
+		estado = Estado::Fighting;
+		snd_desenfundar.play();
+		if (direction.x >= 0) {
+			sprite->changeAnimation(ATACK_PAUSE_RIGHT);
+		}
+		else {
+			sprite->changeAnimation(ATACK_PAUSE_LEFT);
+		}
+	}
+	else if ((Game::instance().getKey('a') || Game::instance().getKey('A')) &&
+		frontMap->getIdTile(tilePosPlayer) == 5) {
+		sprite->changeAnimation(DRINK_RIGHT);
+		estado = Estado::Drinking;
+		snd_beberVida.play();
+		frontMap->clearPath(tilePosPlayer);
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
+
+		int animation = sprite->animation();
+
+		glm::vec2 farPosition = posPlayer + glm::vec2(-64.0f, 0.0f);
+		glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
+
+		if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+			targetPosPlayer = closePosition;
+			if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
+				if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
+					targetPosPlayer = farPosition;
+					estado = Estado::FastWalking;
+					sprite->changeAnimation(MOVE_LEFT);
+				}
+			}
+			else {
+				estado = Estado::SlowWalking;
+				sprite->changeAnimation(SLOW_LEFT);
+			}
+
+		}
+		else {
+			estado = Estado::Stopped;
+			sprite->changeAnimation(animation);
+		}
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
+		int animation = sprite->animation();
+
+		glm::vec2 farPosition = posPlayer + glm::vec2(64.0f, 0.0f);
+		glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
+
+		if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+			targetPosPlayer = closePosition;
+			if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
+				if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
+					targetPosPlayer = farPosition;
+					estado = Estado::FastWalking;
+					sprite->changeAnimation(MOVE_RIGHT);
+					sprite->setFlipY(false);
+				}
+			}
+			else {
+				estado = Estado::SlowWalking;
+				sprite->changeAnimation(SLOW_RIGHT);
+			}
+
+		}
+		else {
+			estado = Estado::Stopped;
+			sprite->changeAnimation(animation);
+		}
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+		// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
+		glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
+		int idTile = physicsMap->getIdTile(tilePos);
+
+		if (idTile == 4 || idTile == 5) {
+			if (idTile == 4) {
+				tilePos.x += 1;
+				sprite->changeAnimation(CLINBING_RIGHT);
+			}
+			if (idTile == 5) {
+				tilePos.x -= 1;
+				sprite->changeAnimation(CLINBING_LEFT);
+			}
+			targetPosPlayer = physicsMap->getPixelPos(tilePos);
+			estado = Estado::Climbing;
+		}
+		else {
+			estado = Estado::Jumping;
+			if (direction.x >= 0) {
+				sprite->changeAnimation(JUMP_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(JUMP_LEFT);
+			}
+			jumpAngle = 0;
+			startY = posPlayer.y;
+		}
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+		if (direction.x >= 0) {
+			sprite->changeAnimation(BEND_RIGHT);
+		}
+		else {
+			sprite->changeAnimation(BEND_LEFT);
+		}
+		estado = Estado::Bend;
+	}
+}
+
+void Player::estado_AtackWalk(int deltaTime) 
+{
+	direction = glm::normalize(targetPosPlayer - posPlayer);
+
+	posPlayer += direction*0.8f;
+
+	if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
+		posPlayer = targetPosPlayer;
+		estado = Estado::Falling;
+		if (direction.x > 0) {
+			sprite->changeAnimation(ATACK_PAUSE_RIGHT);
+		}
+		else {
+			sprite->changeAnimation(ATACK_PAUSE_LEFT);
+		}
+	}
+}
+
+void Player::estado_Atacking(int deltaTime)
+{
+	waitAtack -= deltaTime;
+	if (waitAtack <= 0 && !bAtacking) {
+		bAtacking = true;
+		bBeaten = false;
+		timeToBeReady = 1000;
+		if (direction.x > 0) {
+			sprite->changeAnimation(ATACK_RIGHT);
+		}
+		else if (direction.x < 0) {
+			sprite->changeAnimation(ATACK_LEFT);
+		}
+	}
+
+	if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
+		&& sprite->getCurrentKeyframe() == 2 && !bBeaten) {
+		snd_golpeAire.play();
+	}
+
+	if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
+		&& sprite->getCurrentKeyframe() == 5 && !bBeaten) {
+		int distancia = target->getPosition().x - posPlayer.x;
+		if (direction.x > 0) { // Esta mirando hacia la derecha
+			if (distancia >= 0 && distancia <= 32) {
+				if (target->beaten(damage)) {
+					snd_danoEspada.play();
+				}
+			}
+		}
+		else {
+			if (distancia >= -32 && distancia <= 0) {
+				if (target->beaten(damage)) {
+					snd_danoEspada.play();
+				}
+			}
+		}
+
+
+		bBeaten = true;
+	}
+
+	timeToBeReady -= deltaTime;
+	if (timeToBeReady <= 0) {
+		bAtacking = false;
+		estado = Estado::Stopped;
+	}
+}
+
+void Player::estado_Fighting(int deltaTime)
+{
+	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
+
+		int animation = sprite->animation();
+
+		glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
+
+		if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+			targetPosPlayer = closePosition;
+			estado = Estado::AtackWalk;
+			sprite->changeAnimation(ATACK_WALK_LEFT);
+		}
+		else {
+			estado = Estado::Stopped;
+			sprite->changeAnimation(animation);
+		}
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
+		int animation = sprite->animation();
+
+		glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
+
+		if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
+			targetPosPlayer = closePosition;
+			estado = Estado::AtackWalk;
+			sprite->changeAnimation(ATACK_WALK_RIGHT);
+		}
+		else {
+			estado = Estado::Stopped;
+			sprite->changeAnimation(animation);
+		}
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+		// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
+		glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
+		int idTile = physicsMap->getIdTile(tilePos);
+
+		if (idTile == 4 || idTile == 5) {
+			if (idTile == 4) {
+				tilePos.x += 1;
+				sprite->changeAnimation(CLINBING_RIGHT);
+			}
+			if (idTile == 5) {
+				tilePos.x -= 1;
+				sprite->changeAnimation(CLINBING_LEFT);
+			}
+			targetPosPlayer = physicsMap->getPixelPos(tilePos);
+			estado = Estado::Climbing;
+		}
+		else {
+			estado = Estado::Jumping;
+			if (direction.x >= 0) {
+				sprite->changeAnimation(JUMP_RIGHT);
+			}
+			else {
+				sprite->changeAnimation(JUMP_LEFT);
+			}
+			jumpAngle = 0;
+			startY = posPlayer.y;
+		}
+	}
+	else if (Game::instance().getKey('a') || Game::instance().getKey('A')) {
+		estado = Estado::Atacking;
+	}
+}
+
 void Player::update(int deltaTime, vector<Enemy*>& enemies)
 {
 	sprite->update(deltaTime);
-	glm::ivec2 tilePosPlayer = frontMap->getTilePos(posPlayer);
 
 	if (life <= 0) {
 		sprite->changeAnimation(DEAD);
 		return;
 	}
 
-	bool enemyInSight = false;
+	if (bSuper) {
+		superTime -= deltaTime;
+		if (superTime <= 0) {
+			bSuper = false;
+			maxLife = maxLife / 2;
+			life = min(life, maxLife);
+			damage = damage / 2;
+			sprite->setScaleFactor(1.0f);
+			drawAdjustment = defaultDrawAdjustment;
+		}
+	}
 
 	switch (estado) {
 	case Estado::AtackWalk:
-		direction = glm::normalize(targetPosPlayer - posPlayer);
-
-		posPlayer += direction*0.8f;
-
-		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
-			posPlayer = targetPosPlayer;
-			estado = Estado::Falling;
-			if (direction.x > 0) {
-				sprite->changeAnimation(ATACK_PAUSE_RIGHT);
-			}
-			else {
-				sprite->changeAnimation(ATACK_PAUSE_LEFT);
-			}
-		}
+		estado_AtackWalk(deltaTime);
 		break;
 	case Estado::Atacking:
-		waitAtack -= deltaTime;
-		if (waitAtack <= 0 && !bAtacking) {
-			bAtacking = true;
-			bBeaten = false;
-			timeToBeReady = 1000;
-			if (direction.x > 0) {
-				sprite->changeAnimation(ATACK_RIGHT);
-			}
-			else if (direction.x < 0) {
-				sprite->changeAnimation(ATACK_LEFT);
-			}
-		}
-
-		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
-			&& sprite->getCurrentKeyframe() == 2 && !bBeaten) {
-			snd_golpeAire.play();
-		}
-
-		if ((sprite->animation() == ATACK_LEFT || sprite->animation() == ATACK_RIGHT)
-			&& sprite->getCurrentKeyframe() == 5 && !bBeaten) {
-			int distancia = target->getPosition().x - posPlayer.x;
-			if (direction.x > 0) { // Esta mirando hacia la derecha
-				if (distancia >= 0 && distancia <= 32) {
-					if (target->beaten()) {
-						snd_danoEspada.play();
-					}
-				}
-			}
-			else {
-				if (distancia >= -32 && distancia <= 0) {
-					if (target->beaten()) {
-						snd_danoEspada.play();
-					}
-				}
-			}
-			
-			
-			bBeaten = true;
-		}
-
-		timeToBeReady -= deltaTime;
-		if (timeToBeReady <= 0) {
-			bAtacking = false;
-			estado = Estado::Stopped;
-		}
+		estado_Atacking(deltaTime);
 		break;
 	case Estado::Fighting:
-		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-
-			int animation = sprite->animation();
-
-			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
-
-			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
-				targetPosPlayer = closePosition;
-				estado = Estado::AtackWalk;
-				sprite->changeAnimation(ATACK_WALK_LEFT);
-			}
-			else {
-				estado = Estado::Stopped;
-				sprite->changeAnimation(animation);
-			}
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-			int animation = sprite->animation();
-
-			glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
-
-			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
-				targetPosPlayer = closePosition;
-				estado = Estado::AtackWalk;
-				sprite->changeAnimation(ATACK_WALK_RIGHT);
-			}
-			else {
-				estado = Estado::Stopped;
-				sprite->changeAnimation(animation);
-			}
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-			// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
-			glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
-			int idTile = physicsMap->getIdTile(tilePos);
-
-			if (idTile == 4 || idTile == 5) {
-				if (idTile == 4) {
-					tilePos.x += 1;
-					sprite->changeAnimation(CLINBING_RIGHT);
-				}
-				if (idTile == 5) {
-					tilePos.x -= 1;
-					sprite->changeAnimation(CLINBING_LEFT);
-				}
-				targetPosPlayer = physicsMap->getPixelPos(tilePos);
-				estado = Estado::Climbing;
-			}
-			else {
-				estado = Estado::Jumping;
-				if (direction.x >= 0) {
-					sprite->changeAnimation(JUMP_RIGHT);
-				}
-				else {
-					sprite->changeAnimation(JUMP_LEFT);
-				}
-				jumpAngle = 0;
-				startY = posPlayer.y;
-			}
-		}
-		else if (Game::instance().getKey('a') || Game::instance().getKey('A')) {
-			estado = Estado::Atacking;			
-		}
+		estado_Fighting(deltaTime);
 		break;
 	case Estado::Drinking:
 		if (sprite->getCurrentKeyframe() == 10) {
 			estado = Estado::Stopped;
-			
+			superTime = 30000;
+			maxLife = maxLife * 2;
+			life = maxLife;
+			bSuper = true;
+			damage = damage * 2;
 		}
+		sprite->setScaleFactor(1.0f + (0.4f / 10 * sprite->getCurrentKeyframe()));
+		drawAdjustment = defaultDrawAdjustment * (1.0f + (0.5f / 10 * sprite->getCurrentKeyframe()));
 		break;
 	case Estado::Stopped:
-		if (direction.x >= 0) {
-			sprite->changeAnimation(STAND_RIGHT);
-		}
-		else {
-			sprite->changeAnimation(STAND_LEFT);
-		}
-
-		for (auto& e : enemies) {
-			if (e->getLife() > 0 && posPlayer.y == e->getPosition().y) {
-				enemyInSight = true;
-				target = e;
-			}
-		}
-		
-		if (enemyInSight) {
-			estado = Estado::Fighting;
-			snd_desenfundar.play();
-			if (direction.x >= 0) {
-				sprite->changeAnimation(ATACK_PAUSE_RIGHT);
-			}
-			else {
-				sprite->changeAnimation(ATACK_PAUSE_LEFT);
-			}
-		}
-		else if ((Game::instance().getKey('a') || Game::instance().getKey('A')) &&
-			frontMap->getIdTile(tilePosPlayer) == 5) {
-			sprite->changeAnimation(DRINK_RIGHT);
-			estado = Estado::Drinking;
-			snd_beberVida.play();
-			frontMap->clearPath(tilePosPlayer);
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-
-			int animation = sprite->animation();
-
-			glm::vec2 farPosition = posPlayer + glm::vec2(-64.0f, 0.0f);
-			glm::vec2 closePosition = posPlayer + glm::vec2(-32.0f, 0.0f);
-
-			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
-				targetPosPlayer = closePosition;
-				if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
-					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
-						targetPosPlayer = farPosition;
-						estado = Estado::FastWalking;
-						sprite->changeAnimation(MOVE_LEFT);
-					}
-				}
-				else {
-					estado = Estado::SlowWalking;
-					sprite->changeAnimation(SLOW_LEFT);
-				}
-
-			}
-			else {
-				estado = Estado::Stopped;
-				sprite->changeAnimation(animation);
-			}
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-			int animation = sprite->animation();
-
-			glm::vec2 farPosition = posPlayer + glm::vec2(64.0f, 0.0f);
-			glm::vec2 closePosition = posPlayer + glm::vec2(32.0f, 0.0f);
-
-			if (!physicsMap->collisionMoveLeft(closePosition, colisionBox)) {
-				targetPosPlayer = closePosition;
-				if (!(Game::instance().getKey('A') || Game::instance().getKey('a'))) {
-					if (!physicsMap->collisionMoveLeft(farPosition, colisionBox)) {
-						targetPosPlayer = farPosition;
-						estado = Estado::FastWalking;
-						sprite->changeAnimation(MOVE_RIGHT);
-						sprite->setFlipY(false);
-					}
-				}
-				else {
-					estado = Estado::SlowWalking;
-					sprite->changeAnimation(SLOW_RIGHT);
-				}
-
-			}
-			else {
-				estado = Estado::Stopped;
-				sprite->changeAnimation(animation);
-			}
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-			// Si encima mio hay un cuadradito azul, marcar posicino como arriba, derecha. interporlar la escalada con una funcion suavita.
-			glm::ivec2 tilePos = physicsMap->getTilePos(posPlayer + glm::vec2(0.0f, -32.0f));
-			int idTile = physicsMap->getIdTile(tilePos);
-
-			if (idTile == 4 || idTile == 5) {
-				if (idTile == 4) {
-					tilePos.x += 1;
-					sprite->changeAnimation(CLINBING_RIGHT);
-				}
-				if (idTile == 5) {
-					tilePos.x -= 1;
-					sprite->changeAnimation(CLINBING_LEFT);
-				}
-				targetPosPlayer = physicsMap->getPixelPos(tilePos);
-				estado = Estado::Climbing;
-			}
-			else {
-				estado = Estado::Jumping;
-				if (direction.x >= 0) {
-					sprite->changeAnimation(JUMP_RIGHT);
-				}
-				else {
-					sprite->changeAnimation(JUMP_LEFT);
-				}
-				jumpAngle = 0;
-				startY = posPlayer.y;
-			}
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-			if (direction.x >= 0) {
-				sprite->changeAnimation(BEND_RIGHT);
-			}
-			else {
-				sprite->changeAnimation(BEND_LEFT);
-			}
-			estado = Estado::Bend;
-		}
+		estado_Stopped(deltaTime, enemies);
 		break;
 
 	case Estado::Bend:
@@ -679,7 +729,7 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 		break;
 	}
 
-		setPosition(posPlayer);
+	setPosition(posPlayer);
 }
 
 void Player::render()
@@ -699,8 +749,10 @@ void Player::setFrontMap(TileMap * tileMap)
 
 void Player::setPosition(const glm::vec2 &pos)
 {
-	posPlayer = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x - drawAdjustment.x), float(tileMapDispl.y + posPlayer.y - drawAdjustment.y)));
+	float posX = tileMapDispl.x + posPlayer.x - drawAdjustment.x;
+	float posY = tileMapDispl.y + posPlayer.y - drawAdjustment.y;
+	
+	sprite->setPosition(glm::vec2(posX, posY));
 }
 
 
