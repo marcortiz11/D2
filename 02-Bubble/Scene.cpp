@@ -58,8 +58,9 @@ void Scene::reload()
 	float mapTileSizeY = map->getTileSizeY();
 
 	player->reload(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
-	
-	glm::vec2 enemyPos((INIT_PLAYER_X_TILES + 2) * mapTileSizeX, (INIT_PLAYER_Y_TILES + 2) * mapTileSizeY);
+
+	//Fa falta carregar mapa enemics
+	glm::vec2 enemyPos((23) * mapTileSizeX, (1) * mapTileSizeY);
 	enemies[0]->reload(enemyPos);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
@@ -83,6 +84,7 @@ void Scene::reload()
 	initTraps(trapsMap);
 	physicsMap->reload();
 	frontMap->reload();
+	snd_inicioNivel.play();
 }
 
 void Scene::init()
@@ -125,11 +127,11 @@ void Scene::init()
 
 	estado = Estado::MenuJuego;
 
-	
 	SoundManager& sm = SoundManager::instance();
 	
 	snd_ganar.setBuffer(sm.get("ganar"));
 	snd_perder.setBuffer(sm.get("perder"));
+	snd_inicioNivel.setBuffer(sm.get("inicioNivel"));
 } 
 
 void Scene::update(int deltaTime)
@@ -138,6 +140,7 @@ void Scene::update(int deltaTime)
 	case Estado::MenuJuego:
 		if (!menu.update(deltaTime)) {
 			estado = Estado::Juego;
+			snd_inicioNivel.play();
 		}
 		break;
 	case Estado::Juego:

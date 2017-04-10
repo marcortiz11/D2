@@ -88,6 +88,7 @@ private:
 	sf::Sound snd_golpeAire;
 	sf::Sound snd_desenfundar;
 	sf::Sound snd_beberVida;
+
 };
 
 

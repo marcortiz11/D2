@@ -72,6 +72,7 @@ private:
 
 	sf::Sound snd_ganar;
 	sf::Sound snd_perder;
+	sf::Sound snd_inicioNivel;
 };
 
 
