@@ -1,7 +1,7 @@
 TILEMAP
 41 10 							-- Size of tile map in tiles
 32 63 32 63						-- Tile size & block size
-images/mapa2.png	            			-- Tilesheet
+images/Palace.png	            			-- Tilesheet
 89 15						    -- Number of tiles in tilesheet 
 16                               -- offset
 467 468 469 470 471 472 473 474 475 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 476 918 918 918 918 918 918 
