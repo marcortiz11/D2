@@ -17,9 +17,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	double widthAnim = 1.0 / 16.0;
-	double heightAnim = 1.0 / 20.0;
+	double heightAnim = 1.0 / 32.0;
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(23);
+	sprite->setNumberAnimations(29);
 
 	sprite->setAnimationSpeed(FALLING_LEFT, 1);
 	sprite->addKeyframe(FALLING_LEFT, glm::vec2(1 * widthAnim, 1 * heightAnim));
@@ -257,6 +257,81 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(DRINK_LEFT, glm::vec2(10 * widthAnim, 9 * heightAnim));
 	sprite->addKeyframe(DRINK_LEFT, glm::vec2(11 * widthAnim, 9 * heightAnim));
 
+	sprite->setAnimationSpeed(TURN_LEFT, 1);
+	sprite->addKeyframe(TURN_LEFT, glm::vec2(0 * widthAnim, 19 * heightAnim));
+	sprite->addKeyframe(TURN_LEFT, glm::vec2(1 * widthAnim, 19 * heightAnim));
+	sprite->addKeyframe(TURN_LEFT, glm::vec2(2 * widthAnim, 19 * heightAnim));
+	sprite->addKeyframe(TURN_LEFT, glm::vec2(3 * widthAnim, 19 * heightAnim));
+	sprite->addKeyframe(TURN_LEFT, glm::vec2(4 * widthAnim, 19 * heightAnim));
+	sprite->addKeyframe(TURN_LEFT, glm::vec2(5 * widthAnim, 19 * heightAnim));
+
+	sprite->setAnimationSpeed(TURN_RIGHT, 1);
+	sprite->addKeyframe(TURN_RIGHT, glm::vec2(0 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(TURN_RIGHT, glm::vec2(1 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(TURN_RIGHT, glm::vec2(2 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(TURN_RIGHT, glm::vec2(3 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(TURN_RIGHT, glm::vec2(4 * widthAnim, 18 * heightAnim));
+	sprite->addKeyframe(TURN_RIGHT, glm::vec2(5 * widthAnim, 18 * heightAnim));
+
+
+	sprite->setAnimationSpeed(JUMP_SMALL_LEFT, 8);
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(0 * widthAnim, 21 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(1 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(2 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(3 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(4 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(5 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(6 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(7 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(8 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(9 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(10 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(11 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(12 * widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(13* widthAnim, 21* heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_LEFT, glm::vec2(14 * widthAnim, 21 * heightAnim));
+	
+	sprite->setAnimationSpeed(JUMP_SMALL_RIGHT, 8);
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(0 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(1 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(2 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(3 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(4 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(5 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(6 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(7 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(8 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(9 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(10 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(11 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(12 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(13 * widthAnim, 20 * heightAnim));
+	sprite->addKeyframe(JUMP_SMALL_RIGHT, glm::vec2(14 * widthAnim, 20 * heightAnim));
+
+	sprite->setAnimationSpeed(JUMP_BIG_RIGHT, 8);
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(0 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(1 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(2 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(3 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(4 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(5 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(6 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(7 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(8 * widthAnim, 12 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_RIGHT, glm::vec2(9 * widthAnim, 12 * heightAnim));
+
+	sprite->setAnimationSpeed(JUMP_BIG_LEFT, 8);
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(0 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(1 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(2 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(3 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(4 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(5 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(6 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(7 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(8 * widthAnim, 13 * heightAnim));
+	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(9 * widthAnim, 13 * heightAnim));
+
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 
@@ -315,7 +390,7 @@ Enemy * Player::getTarget()
 
 bool Player::beaten()
 {
-	life -= 1;
+	life = max(life-1, 0);
 	snd_danoPropio.play();
 	return true;
 }
