@@ -99,11 +99,11 @@ void Scene::reload()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	physicsMap = TileMap::createTileMap("levels/level05.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
-	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	trapsMap = TileMap::createTileMap("levels/trap05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	physicsMap = TileMap::createTileMap("levels/level06.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	frontMap = TileMap::createTileMap("levels/front06.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
+	torchMap = TileMap::createTileMap("levels/torches06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	trapsMap = TileMap::createTileMap("levels/trap06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	enemyMap = TileMap::createTileMap("levels/enemies06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	initTorches(torchMap); 
@@ -151,6 +151,11 @@ bool Scene::update(int deltaTime)
 			statusBar.setDead(true);
 			snd_perder.play();
 		}
+		else if (statusBar.timeout()) {
+			snd_inicioNivel.stop();
+			snd_perder.play();
+			estado = Estado::Muerto;
+		}
 		else if (player->win()) {
 			return false;
 		}
@@ -171,10 +176,13 @@ bool Scene::update(int deltaTime)
 }
 
 void Scene::updateEntities(int deltaTime) {
-	player->update(deltaTime, enemies);
-	for (Enemy* e : enemies) {
-		e->update(deltaTime, *player);
+	if (!statusBar.timeout()) {
+		player->update(deltaTime, enemies);
+		for (Enemy* e : enemies) {
+			e->update(deltaTime, *player);
+		}
 	}
+	
 	for (int i = 0; i < torches.size(); ++i) torches[i]->update(deltaTime);
 	for (int i = 0; i < buttons.size(); ++i) buttons[i]->update(deltaTime, player->getPosition());
 	for (int i = 0; i < gates.size(); ++i) gates[i]->update(deltaTime, physicsMap);
@@ -238,6 +246,13 @@ void Scene::nextLevel()
 {
 }
 
+void Scene::setWin()
+{
+	estado = Estado::MenuJuego;
+	menu.setWin();
+	reload();
+}
+
 void Scene::initTorches(TileMap* torcheMap) {
 
 	int* map = torcheMap->getTileMap();
@@ -274,7 +289,7 @@ void Scene::initTraps(TileMap* trapsMap) {
 		//Index parells = botons
 		if (matrix[i]%2) {
 			ActivationButton* b = new ActivationButton();
-			b->init(map, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
+			b->init(map, "images/Animacion_Boton.png", glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
 			buttons.push_back(b);
 		}
 		//Index imparells = portes.
@@ -283,7 +298,7 @@ void Scene::initTraps(TileMap* trapsMap) {
 			if (buttons.size() > boto_ref) {
 				//TODO: Dibuixar en front map el pal de la porta de dabant
 				Gate* g = new Gate();
-				g->init(buttons[boto_ref], glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
+				g->init(buttons[boto_ref], "images/Animacio_Porta.png", glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
 				gates.push_back(g);
 			}
 		}

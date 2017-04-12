@@ -12,7 +12,7 @@ class Gate
 {
 
 public:
-	void init(ActivationButton *b, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(ActivationButton *b, string textureName, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime, TileMap* physics);
 	void render();
 

@@ -30,6 +30,7 @@ public:
 	void setPosition(glm::vec2 pos);
 	void setPlayer(Player* player);
 	void setDead(bool b);
+	bool timeout();
 
 private:
 	glm::ivec2 tileMapDispl;

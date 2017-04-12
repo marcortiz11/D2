@@ -8,11 +8,13 @@ class Menu
 public:
 	Menu();
 	enum Screen {
-		Jugar, Instrucciones, Creditos, InstruccionesTexto, CreditoTexto
+		Jugar, Instrucciones, Creditos, InstruccionesTexto, CreditoTexto, Win
 	};
 	void init(ShaderProgram &shaderProgram);
 	bool update(int deltaTime);
 	void render();
+
+	void setWin();
 
 private:
 	glm::ivec2 tileMapDispl;

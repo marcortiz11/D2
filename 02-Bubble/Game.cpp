@@ -34,7 +34,11 @@ bool Game::update(int deltaTime)
 		}
 	}
 	else {
-		sceneB.update(deltaTime);
+		if (!sceneB.update(deltaTime)) {
+			nScene = 1;
+			scene.setWin();
+			sceneB.reload();
+		}
 	}
 	return bPlay;
 }

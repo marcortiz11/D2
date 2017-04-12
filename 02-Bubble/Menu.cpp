@@ -14,10 +14,10 @@ void Menu::init(ShaderProgram & shaderProgram)
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	double widthAnim = 1;
-	double heightAnim = 1.0/5.0;
+	double heightAnim = 1.0/6.0;
 	//TODO: definir como constantes de la classe el tamanyo de la antorcha
 	sprite = Sprite::createSprite(glm::ivec2(320, 189), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(5);
+	sprite->setNumberAnimations(6);
 
 	sprite->setAnimationSpeed(Jugar, 12);
 	sprite->addKeyframe(Jugar, glm::vec2(0 * widthAnim,0* heightAnim));
@@ -33,8 +33,12 @@ void Menu::init(ShaderProgram & shaderProgram)
 
 	sprite->setAnimationSpeed(CreditoTexto, 12);
 	sprite->addKeyframe(CreditoTexto, glm::vec2(0 * widthAnim, 4*heightAnim));
+	
+	sprite->setAnimationSpeed(Win, 1);
+	sprite->addKeyframe(Win, glm::vec2(0 * widthAnim, 5 * heightAnim));
 
 	sprite->changeAnimation(0);
+
 
 	sprite->setPosition(glm::vec2(0, 0));
 
@@ -104,6 +108,7 @@ bool Menu::update(int deltaTime)
 			break;
 		case InstruccionesTexto:
 		case CreditoTexto:
+		case Win:
 			if (Game::instance().getKey(13)) { //Press enter
 				sprite->changeAnimation(Jugar);
 				screen = Screen::Jugar;
@@ -120,4 +125,10 @@ bool Menu::update(int deltaTime)
 void Menu::render()
 {
 	sprite->render();
+}
+
+void Menu::setWin()
+{
+	sprite->changeAnimation(Win);
+	screen = Win;
 }

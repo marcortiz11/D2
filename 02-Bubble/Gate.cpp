@@ -8,9 +8,9 @@
 
 enum STATE {CLOSED,MOVING,OPENED};
 
-void Gate::init(ActivationButton *button, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Gate::init(ActivationButton *button, string textureName, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-	spritesheet.loadFromFile("images/Animacio_Porta.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(textureName, TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	double widthAnim = 1;

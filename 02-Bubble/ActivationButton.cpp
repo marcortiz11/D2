@@ -8,9 +8,9 @@
 
 enum STATE { UNTOUCHED, PUSHED };
 
-void ActivationButton::init(TileMap* t, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void ActivationButton::init(TileMap* t, string textureName, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-	spritesheet.loadFromFile("images/Animacion_Boton.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(textureName, TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	double widthAnim = 1/2.0;

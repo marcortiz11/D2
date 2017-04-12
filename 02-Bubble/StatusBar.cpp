@@ -15,7 +15,7 @@ StatusBar::~StatusBar()
 void StatusBar::reload() 
 {
 	sprite->changeAnimation(0);
-	elapsedTime = 3'600'000;
+	elapsedTime = 600'000;
 	bDead = false;
 }
 
@@ -143,7 +143,13 @@ void StatusBar::render()
 		char str[16];
 		sprintf(str, "YOU ARE DEAD");
 		text.render(str, glm::vec2(400, 609), 25, glm::vec4(1, 1, 1, 1));
-	} else {
+	}
+	else if (elapsedTime <= 0) {
+		char str[16];
+		sprintf(str, "- TIME OUT -");
+		text.render(str, glm::vec2(400, 609), 25, glm::vec4(1, 1, 1, 1));
+	}
+	 else {
 		if (elapsedTime % 60000 >= 57000) {
 			int minutes = elapsedTime / 1000 / 60;
 			char str[16];
@@ -168,4 +174,9 @@ void StatusBar::setPlayer(Player * player)
 void StatusBar::setDead(bool b)
 {
 	bDead = b;
+}
+
+bool StatusBar::timeout()
+{
+	return elapsedTime <= 0;
 }

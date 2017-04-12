@@ -38,9 +38,10 @@ public:
 	void initEnemies(TileMap *enemies);
 	bool update(int deltaTime);
 	void render();
+	void reload();
 private:
 	void initShaders();
-	void reload();
+
 	void updateEntities(int deltaTime);
 
 private:

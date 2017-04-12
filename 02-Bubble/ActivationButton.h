@@ -10,7 +10,7 @@ class ActivationButton
 {
 
 public:
-	void init(TileMap* map, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(TileMap* map,string textureName, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime, const glm::ivec2 &playerPos);
 	void render();
 	int isPushed() { return state; };

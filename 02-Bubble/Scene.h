@@ -39,6 +39,7 @@ public:
 	bool update(int deltaTime);
 	void render();
 	void nextLevel();
+	void setWin();
 private:
 	void initShaders();
 	void reload();
