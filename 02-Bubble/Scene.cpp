@@ -98,12 +98,12 @@ void Scene::reload()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	physicsMap = TileMap::createTileMap("levels/level06.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	frontMap = TileMap::createTileMap("levels/front06.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
-	torchMap = TileMap::createTileMap("levels/torches06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	trapsMap = TileMap::createTileMap("levels/trap06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	enemyMap = TileMap::createTileMap("levels/enemies06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	physicsMap = TileMap::createTileMap("levels/level05.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
+	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	trapsMap = TileMap::createTileMap("levels/trap05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	//enemyMap = TileMap::createTileMap("levels/enemies05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	initTorches(torchMap); 
 	initTraps(trapsMap);
@@ -117,7 +117,7 @@ void Scene::init()
 	player->setFrontMap(frontMap);
 
 	//Init the enemy based on template
-	initEnemies(enemyMap);
+	//initEnemies(enemyMap);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 

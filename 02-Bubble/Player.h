@@ -26,71 +26,38 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 
+	void estado_Stopped(int deltaTime, vector<Enemy*>& enemies);
+	void estado_AtackWalk(int deltaTime);
+	void estado_Atacking(int deltaTime);
+	void estado_Fighting(int deltaTime);
 
 	bool beaten();
 	int getLife();
 	int getMaxLife();
 
 	Enemy* getTarget();
-	
-	enum class Estado { 
-		//WALKING
-		Stopped,
-		Turn,
-		StartRun,
-		Running,
-		StopRun, 
-		SlowWalking,
-		JumpBig,
 
-		// Stoped ACTIONS
-		JumpVertical,
-		JumpSmall,
-		Falling, 
-		Climbing,
-		Bend, 
-		
-		//FIGHT
-		Fighting, 
-		Atacking, 
-		AtackWalk, 
-		
-		//ACTIONS
-		Drinking,
-		SIZE
+	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing,
+		Bend, Fighting, Atacking, AtackWalk, Drinking, JumpBig
 	};
-	
+
 	enum PlayerAnims
 	{
-		DEAD,
-		FALLING_LEFT, FALLING_RIGHT, 
-		STAND_LEFT, STAND_RIGHT,
-		MOVE_LEFT, MOVE_RIGHT,
-		JUMP_RIGHT, JUMP_LEFT, 
-		SLOW_RIGHT, SLOW_LEFT,
-		CLINBING_LEFT, CLINBING_RIGHT,
-		BEND_LEFT, BEND_RIGHT,
-		ATACK_RIGHT, ATACK_LEFT, 
-		ATACK_WALK_RIGHT, ATACK_WALK_LEFT,
-		ATACK_PAUSE_RIGHT, ATACK_PAUSE_LEFT,
-		DRINK_RIGHT, DRINK_LEFT,
-		JUMP_SMALL_LEFT, JUMP_SMALL_RIGHT, 
-		JUMP_BIG_LEFT, JUMP_BIG_RIGHT,
-		TURN_LEFT, TURN_RIGHT,
-		RUNNING_LEFT, RUNNING_RIGHT
+		FALLING_LEFT, FALLING_RIGHT, DEAD,
+		STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, SLOW_RIGHT,
+		SLOW_LEFT, CLINBING_LEFT, CLINBING_RIGHT, BEND_LEFT, BEND_RIGHT,
+		ATACK_RIGHT, ATACK_LEFT, ATACK_WALK_RIGHT, ATACK_WALK_LEFT, ATACK_PAUSE_RIGHT,
+		ATACK_PAUSE_LEFT, DRINK_RIGHT, DRINK_LEFT,
+		JUMP_SMALL_LEFT, JUMP_SMALL_RIGHT, JUMP_BIG_LEFT, JUMP_BIG_RIGHT,
+		TURN_LEFT, TURN_RIGHT
 	};
 
-	struct EstadoAnimacion {
-		PlayerAnims left;
-		PlayerAnims right;
-	};
-
-	EstadoAnimacion estadoAnimacion[Estado::SIZE];
 
 private:
 	bool bJumping, bMoving;
+	float jumpDistance;
 	glm::ivec2 tileMapDispl;
-	glm::vec2 posPlayer, targetPosPlayer, direction;
+	glm::vec2 posPlayer, targetPosPlayer, prevPosPlayer, direction;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
@@ -104,6 +71,8 @@ private:
 	Estado estado;
 
 	Enemy* target;
+
+	vector<float> alturaBigJump;
 
 	int life;
 	int maxLife;
