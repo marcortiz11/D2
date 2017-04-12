@@ -40,7 +40,7 @@ public:
 	Enemy* getTarget();
 
 	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing,
-		Bend, Fighting, Atacking, AtackWalk, Drinking, JumpBig
+		Bend, Fighting, Atacking, AtackWalk, Drinking, JumpBig, Turning
 	};
 
 	enum PlayerAnims
@@ -51,7 +51,9 @@ public:
 		ATACK_RIGHT, ATACK_LEFT, ATACK_WALK_RIGHT, ATACK_WALK_LEFT, ATACK_PAUSE_RIGHT,
 		ATACK_PAUSE_LEFT, DRINK_RIGHT, DRINK_LEFT,
 		JUMP_SMALL_LEFT, JUMP_SMALL_RIGHT, JUMP_BIG_LEFT, JUMP_BIG_RIGHT,
-		TURN_LEFT, TURN_RIGHT
+		TURN_LEFT, TURN_RIGHT,
+		START_RUN_LEFT, STOP_RUN_LEFT, START_RUN_RIGHT, STOP_RUN_RIGHT,
+		RUNNING_RIGHT, RUNNING_LEFT
 	};
 
 
@@ -84,6 +86,7 @@ private:
 	int waitAtack;
 	int timeToBeReady;
 	int superTime;
+	int waitPaso;
 
 	bool bAtacking;
 	bool bBeaten;
@@ -95,6 +98,7 @@ private:
 	sf::Sound snd_golpeAire;
 	sf::Sound snd_desenfundar;
 	sf::Sound snd_beberVida;
+	sf::Sound snd_paso;
 
 };
 

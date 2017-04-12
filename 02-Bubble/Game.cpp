@@ -20,6 +20,7 @@ void Game::init()
 	sm.add("ganar", "sounds/final.wav");
 	sm.add("perder", "sounds/perder.wav");
 	sm.add("inicioNivel", "sounds/inicioNivel.wav");
+	sm.add("paso", "sounds/paso.wav");
 
 	scene.init();
 	sceneB.init();

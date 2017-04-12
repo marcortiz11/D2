@@ -9,7 +9,7 @@
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 3
-#define INIT_PLAYER_Y_TILES 1
+#define INIT_PLAYER_Y_TILES 2
 
 
 SceneB::SceneB()
@@ -111,7 +111,7 @@ void SceneB::init()
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	//player->updatePosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
+	player->reload(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
 	player->setPhysicsTileMap(physicsMap);
 	player->setFrontMap(frontMap);
 

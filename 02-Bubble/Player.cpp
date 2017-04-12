@@ -335,6 +335,55 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(8 * widthAnim, 13 * heightAnim));
 	sprite->addKeyframe(JUMP_BIG_LEFT, glm::vec2(9 * widthAnim, 13 * heightAnim));
 
+	sprite->setAnimationSpeed(START_RUN_LEFT, 8);
+	sprite->addKeyframe(START_RUN_LEFT, glm::vec2(0 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(START_RUN_LEFT, glm::vec2(1 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(START_RUN_LEFT, glm::vec2(2 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(START_RUN_LEFT, glm::vec2(3 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(START_RUN_LEFT, glm::vec2(4 * widthAnim, 3 * heightAnim));
+
+	sprite->setAnimationSpeed(STOP_RUN_LEFT, 8);
+	sprite->addKeyframe(STOP_RUN_LEFT, glm::vec2(5 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_LEFT, glm::vec2(6 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_LEFT, glm::vec2(7 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_LEFT, glm::vec2(8 * widthAnim, 3 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_LEFT, glm::vec2(9 * widthAnim, 3 * heightAnim));
+
+	sprite->setAnimationSpeed(START_RUN_RIGHT, 8);
+	sprite->addKeyframe(START_RUN_RIGHT, glm::vec2(0 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(START_RUN_RIGHT, glm::vec2(1 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(START_RUN_RIGHT, glm::vec2(2 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(START_RUN_RIGHT, glm::vec2(3 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(START_RUN_RIGHT, glm::vec2(4 * widthAnim, 2 * heightAnim));
+
+	sprite->setAnimationSpeed(STOP_RUN_RIGHT, 8);
+	sprite->addKeyframe(STOP_RUN_RIGHT, glm::vec2(5 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_RIGHT, glm::vec2(6 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_RIGHT, glm::vec2(7 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_RIGHT, glm::vec2(8 * widthAnim, 2 * heightAnim));
+	sprite->addKeyframe(STOP_RUN_RIGHT, glm::vec2(9 * widthAnim, 2 * heightAnim));
+
+	sprite->setAnimationSpeed(RUNNING_RIGHT, 8);
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(0 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(1 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(2 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(3 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(4 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(5 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(6 * widthAnim, 22 * heightAnim));
+	sprite->addKeyframe(RUNNING_RIGHT, glm::vec2(7 * widthAnim, 22 * heightAnim));
+
+
+	sprite->setAnimationSpeed(RUNNING_LEFT, 8);
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(0 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(1 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(2 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(3 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(4 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(5 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(6 * widthAnim, 23 * heightAnim));
+	sprite->addKeyframe(RUNNING_LEFT, glm::vec2(7 * widthAnim, 23 * heightAnim));
+
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -349,6 +398,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	life = 3;
 	maxLife = 3;
 	damage = 1;
+	waitPaso = 0;
 
 	SoundManager& sm = SoundManager::instance();
 
@@ -357,6 +407,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	snd_golpeAire.setBuffer(sm.get("golpeAire"));
 	snd_desenfundar.setBuffer(sm.get("desenfundar"));
 	snd_beberVida.setBuffer(sm.get("beberVida"));
+	snd_paso.setBuffer(sm.get("paso"));
 }
 
 void Player::reload(const glm::ivec2 & position)
@@ -368,6 +419,7 @@ void Player::reload(const glm::ivec2 & position)
 	direction = glm::vec2(1.0f, 0.0f);
 
 	bMoving = false;
+	bSuper = false;
 	life = 3;
 }
 
@@ -439,6 +491,16 @@ void Player::estado_Stopped(int deltaTime, vector<Enemy*>& enemies)
 		estado = Estado::Drinking;
 		snd_beberVida.play();
 		frontMap->clearPath(tilePosPlayer);
+	}
+	else if (direction.x >= 0 && Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
+		sprite->changeAnimation(TURN_RIGHT);
+		direction.x = -1;
+		estado = Estado::Turning;
+	}
+	else if (direction.x < 0 && Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
+		sprite->changeAnimation(TURN_LEFT);
+		direction.x = 1;
+		estado = Estado::Turning;
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) &&
 		Game::instance().getSpecialKey(GLUT_KEY_UP)) 
@@ -733,6 +795,11 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 	}
 
 	switch (estado) {
+	case Estado::Turning:
+		if (sprite->getCurrentKeyframe() == 5) {
+			estado = Estado::Stopped;
+		}
+		break;
 	case Estado::JumpBig: {
 		float distance = glm::distance(targetPosPlayer, posPlayer);
 		direction = glm::normalize(targetPosPlayer - posPlayer);
@@ -841,6 +908,14 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 		direction = glm::normalize(targetPosPlayer - posPlayer);
 
 		posPlayer += direction;
+
+		if ((sprite->getCurrentKeyframe() == 0 || sprite->getCurrentKeyframe() == 4) && waitPaso <= 0) {
+			snd_paso.play();
+			waitPaso = 200;
+		}
+		else {
+			waitPaso -= deltaTime;
+		}
 
 		if (glm::distance(targetPosPlayer, posPlayer) <= 1.5f) {
 			posPlayer = targetPosPlayer;
