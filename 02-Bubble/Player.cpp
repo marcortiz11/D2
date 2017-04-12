@@ -387,6 +387,11 @@ int Player::getMaxLife()
 	return maxLife;
 }
 
+bool Player::win()
+{
+	return physicsMap->getIdTile(physicsMap->getTilePos(posPlayer)) == 7;
+}
+
 Enemy * Player::getTarget()
 {
 	return target;

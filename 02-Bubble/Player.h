@@ -34,6 +34,7 @@ public:
 	bool beaten();
 	int getLife();
 	int getMaxLife();
+	bool win();
 
 	Enemy* getTarget();
 

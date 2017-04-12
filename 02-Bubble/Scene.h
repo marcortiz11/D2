@@ -38,7 +38,7 @@ public:
 	void initEnemies(TileMap *enemies);
 	void update(int deltaTime);
 	void render();
-
+	void nextLevel();
 private:
 	void initShaders();
 	void reload();

@@ -103,7 +103,7 @@ void Scene::init()
 	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
 	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	trapsMap = TileMap::createTileMap("levels/trap05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	//enemyMap = TileMap::createTileMap("levels/enemies05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	enemyMap = TileMap::createTileMap("levels/enemies06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	initTorches(torchMap); 
 	initTraps(trapsMap);
@@ -117,7 +117,7 @@ void Scene::init()
 	player->setFrontMap(frontMap);
 
 	//Init the enemy based on template
-	//initEnemies(enemyMap);
+	initEnemies(enemyMap);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
@@ -150,6 +150,9 @@ void Scene::update(int deltaTime)
 			estado = Estado::Muerto;
 			statusBar.setDead(true);
 			snd_perder.play();
+		}
+		else if (player->win()) {
+			nextLevel();
 		}
 		updateEntities(deltaTime);
 		break;
@@ -228,6 +231,10 @@ void Scene::render()
 	if (estado == Estado::MenuJuego) {
 		menu.render();
 	}
+}
+
+void Scene::nextLevel()
+{
 }
 
 void Scene::initTorches(TileMap* torcheMap) {
