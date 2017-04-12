@@ -1,27 +1,27 @@
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Scene.h"
+#include "SceneB.h"
 #include "Game.h"
 
 
 #define SCREEN_X 32
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 1
+#define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 1
 
 
-Scene::Scene()
+SceneB::SceneB()
 {
 	map = NULL;
 	player = NULL;
 	frontMap = NULL;
 }
 
-Scene::~Scene()
+SceneB::~SceneB()
 {
-	if(map != NULL)
+	if (map != NULL)
 		delete map;
 	if (physicsMap != nullptr)
 		delete physicsMap;
@@ -35,7 +35,7 @@ Scene::~Scene()
 		delete fallingFloor;
 	if (trapsMap != nullptr)
 		delete trapsMap;
-	if(player != NULL)
+	if (player != NULL)
 		delete player;
 
 	for (int i = 0; i < torches.size(); ++i) {
@@ -55,15 +55,13 @@ Scene::~Scene()
 	}
 }
 
-void Scene::reload() 
+void SceneB::reload()
 {
-	snd_perder.stop();
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
 
 	player->reload(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
-	
-	
+
 	//Fa falta carregar mapa enemics
 	glm::vec2 enemyPos((23) * mapTileSizeX, (1) * mapTileSizeY);
 	enemies[0]->reload(enemyPos);
@@ -71,6 +69,7 @@ void Scene::reload()
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
 	statusBar.init(glm::ivec2(0, 0), texProgram);
+	menu.init(texProgram);
 
 	bDead = false;
 
@@ -96,23 +95,24 @@ void Scene::reload()
 	snd_inicioNivel.play();
 }
 
-void Scene::init()
+void SceneB::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	physicsMap = TileMap::createTileMap("levels/level05.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	frontMap = TileMap::createTileMap("levels/front05.txt",glm::vec2(SCREEN_X,SCREEN_Y), texProgram);
-	torchMap = TileMap::createTileMap("levels/torches05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	trapsMap = TileMap::createTileMap("levels/trap05.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	physicsMap = TileMap::createTileMap("levels/level06.phy", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	frontMap = TileMap::createTileMap("levels/front06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	torchMap = TileMap::createTileMap("levels/torches06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	trapsMap = TileMap::createTileMap("levels/trap06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	enemyMap = TileMap::createTileMap("levels/enemies06.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
-	initTorches(torchMap); 
+	initTorches(torchMap);
 	initTraps(trapsMap);
 	float mapTileSizeX = map->getTileSizeX();
 	float mapTileSizeY = map->getTileSizeY();
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	//player->updatePosition(glm::vec2(INIT_PLAYER_X_TILES * mapTileSizeX, INIT_PLAYER_Y_TILES * mapTileSizeY));
 	player->setPhysicsTileMap(physicsMap);
 	player->setFrontMap(frontMap);
 
@@ -121,30 +121,23 @@ void Scene::init()
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
-	statusBar.init(glm::ivec2(0,0), texProgram);
+	statusBar.init(glm::ivec2(0, 0), texProgram);
 	statusBar.setPlayer(player);
-	menu.init(texProgram);
 	bDead = false;
 	bShowMenu = true;
 
-	estado = Estado::MenuJuego;
+	estado = Estado::Juego;
 
 	SoundManager& sm = SoundManager::instance();
-	
+
 	snd_ganar.setBuffer(sm.get("ganar"));
 	snd_perder.setBuffer(sm.get("perder"));
 	snd_inicioNivel.setBuffer(sm.get("inicioNivel"));
-} 
+}
 
-bool Scene::update(int deltaTime)
+bool SceneB::update(int deltaTime)
 {
 	switch (estado) {
-	case Estado::MenuJuego:
-		if (!menu.update(deltaTime)) {
-			estado = Estado::Juego;
-			snd_inicioNivel.play();
-		}
-		break;
 	case Estado::Juego:
 		if (player->getLife() <= 0) {
 			estado = Estado::Muerto;
@@ -162,15 +155,15 @@ bool Scene::update(int deltaTime)
 		if (Game::instance().getKey(13)) {
 			reload();
 			estado = Estado::Juego;
-			
+
 		}
 
 		break;
-	}	
+	}
 	return true;
 }
 
-void Scene::updateEntities(int deltaTime) {
+void SceneB::updateEntities(int deltaTime) {
 	player->update(deltaTime, enemies);
 	for (Enemy* e : enemies) {
 		e->update(deltaTime, *player);
@@ -182,7 +175,7 @@ void Scene::updateEntities(int deltaTime) {
 	statusBar.update(deltaTime);
 }
 
-void Scene::render()
+void SceneB::render()
 {
 	glm::mat4 modelview;
 
@@ -212,7 +205,7 @@ void Scene::render()
 	for (Enemy* e : enemies) {
 		e->render();
 	}
-	
+
 
 	texProgram.setUniform1f("invertir", 0.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
@@ -229,16 +222,9 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
-	if (estado == Estado::MenuJuego) {
-		menu.render();
-	}
 }
 
-void Scene::nextLevel()
-{
-}
-
-void Scene::initTorches(TileMap* torcheMap) {
+void SceneB::initTorches(TileMap* torcheMap) {
 
 	int* map = torcheMap->getTileMap();
 	int rows = torcheMap->getMapSizeY();
@@ -259,7 +245,7 @@ void Scene::initTorches(TileMap* torcheMap) {
 	}
 }
 
-void Scene::initTraps(TileMap* trapsMap) {
+void SceneB::initTraps(TileMap* trapsMap) {
 
 	int* matrix = trapsMap->getTileMap();
 	int rows = trapsMap->getMapSizeY();
@@ -272,13 +258,13 @@ void Scene::initTraps(TileMap* trapsMap) {
 	int i = 0;
 	while (i < elems) {
 		//Index parells = botons
-		if (matrix[i]%2) {
+		if (matrix[i] % 2) {
 			ActivationButton* b = new ActivationButton();
 			b->init(map, glm::ivec2((i%cols)*tileSizeX, (i / cols)*tileSizeY), texProgram);
 			buttons.push_back(b);
 		}
 		//Index imparells = portes.
-		else if (matrix[i]+1 % 2 && matrix[i] != 50) {
+		else if (matrix[i] + 1 % 2 && matrix[i] != 50) {
 			int boto_ref = (matrix[i] - 1) - 1;
 			if (buttons.size() > boto_ref) {
 				//TODO: Dibuixar en front map el pal de la porta de dabant
@@ -297,7 +283,7 @@ void Scene::initTraps(TileMap* trapsMap) {
 	}
 }
 
-void Scene::initEnemies(TileMap *eMap) {
+void SceneB::initEnemies(TileMap *eMap) {
 
 	int* map = eMap->getTileMap();
 	int rows = eMap->getMapSizeY();
@@ -320,18 +306,18 @@ void Scene::initEnemies(TileMap *eMap) {
 	}
 }
 
-void Scene::initShaders()
+void SceneB::initShaders()
 {
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -340,7 +326,7 @@ void Scene::initShaders()
 	texProgram.addShader(vShader);
 	texProgram.addShader(fShader);
 	texProgram.link();
-	if(!texProgram.isLinked())
+	if (!texProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << texProgram.log() << endl << endl;

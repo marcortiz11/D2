@@ -1,5 +1,5 @@
-#ifndef _SCENE_INCLUDE
-#define _SCENE_INCLUDE
+#ifndef _SceneB_INCLUDE
+#define _SceneB_INCLUDE
 
 
 #include <glm/glm.hpp>
@@ -17,20 +17,20 @@
 #include "ActivationButton.h"
 
 
-// Scene contains all the entities of our game.
+// SceneB contains all the entities of our game.
 // It is responsible for updating and render them.
 
 
-class Scene
+class SceneB
 {
 public:
 	enum Estado {
-		MenuJuego, Juego, Muerto
+		Juego, Muerto
 	};
 
 public:
-	Scene();
-	~Scene();
+	SceneB();
+	~SceneB();
 
 	void init();
 	void initTorches(TileMap* torcheMap);
@@ -38,7 +38,6 @@ public:
 	void initEnemies(TileMap *enemies);
 	bool update(int deltaTime);
 	void render();
-	void nextLevel();
 private:
 	void initShaders();
 	void reload();
@@ -54,13 +53,13 @@ private:
 	TileMap *trapsMap;
 	TileMap *enemyMap;
 	Player *player;
-	
+
 	vector<Torch*> torches;
 	vector<Gate*> gates;
 	vector<ActivationButton*> buttons;
 	vector<Guillotina*> guillotinas;
 	vector<Enemy*> enemies;
-	
+
 	ShaderProgram texProgram;
 	glm::mat4 projection;
 
@@ -70,7 +69,7 @@ private:
 
 	bool bDead;
 	bool bShowMenu;
-	
+
 	Estado estado;
 
 
@@ -80,5 +79,5 @@ private:
 };
 
 
-#endif // _SCENE_INCLUDE
+#endif // _SceneB_INCLUDE
 

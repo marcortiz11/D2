@@ -339,7 +339,6 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 
-	setPosition(glm::vec2(400, 140));
 	colisionBox = glm::ivec2(12, 44);
 	defaultDrawAdjustment = glm::vec2(45, 40);
 	drawAdjustment = defaultDrawAdjustment;
@@ -873,7 +872,7 @@ void Player::update(int deltaTime, vector<Enemy*>& enemies)
 		break;
 	}
 
-	setPosition(posPlayer);
+	updatePosition();
 }
 
 void Player::render()
@@ -891,7 +890,12 @@ void Player::setFrontMap(TileMap * tileMap)
 	frontMap = tileMap;
 }
 
-void Player::setPosition(const glm::vec2 &pos)
+void Player::setPosition(const glm::vec2 & pos)
+{
+	posPlayer = pos;
+}
+
+void Player::updatePosition()
 {
 	float posX = tileMapDispl.x + posPlayer.x - drawAdjustment.x;
 	float posY = tileMapDispl.y + posPlayer.y - drawAdjustment.y;

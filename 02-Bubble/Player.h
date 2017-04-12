@@ -24,6 +24,7 @@ public:
 	void setPhysicsTileMap(TileMap *tileMap);
 	void setFrontMap(TileMap* tileMap);
 	void setPosition(const glm::vec2 &pos);
+	void updatePosition();
 	glm::vec2 getPosition();
 
 	void estado_Stopped(int deltaTime, vector<Enemy*>& enemies);

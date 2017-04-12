@@ -22,19 +22,33 @@ void Game::init()
 	sm.add("inicioNivel", "sounds/inicioNivel.wav");
 
 	scene.init();
+	sceneB.init();
+	nScene = 1;
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
-	
+	if (nScene == 1) {
+		if (!scene.update(deltaTime)) {
+			nScene++;
+		}
+	}
+	else {
+		sceneB.update(deltaTime);
+	}
 	return bPlay;
 }
 
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	if (nScene == 1) {
+		scene.render();
+	}
+	else {
+		sceneB.render();
+	}
+	
 }
 
 void Game::keyPressed(int key)
