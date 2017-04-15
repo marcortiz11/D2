@@ -40,7 +40,7 @@ public:
 	Enemy* getTarget();
 
 	enum class Estado { FastWalking, SlowWalking, Jumping, Falling, Stopped, Climbing,
-		Bend, Fighting, Atacking, AtackWalk, Drinking, JumpBig, Turning
+		Bend, Fighting, Atacking, AtackWalk, Drinking, JumpBig, Turning, StartWalking, StopWalking
 	};
 
 	enum PlayerAnims

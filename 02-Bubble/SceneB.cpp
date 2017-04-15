@@ -269,8 +269,8 @@ void SceneB::initTraps(TileMap* trapsMap) {
 			buttons.push_back(b);
 		}
 		//Index imparells = portes.
-		else if (matrix[i] + 1 % 2 && matrix[i] != 50) {
-			int boto_ref = (matrix[i] - 1) - 1;
+		else if (matrix[i] > 0 && (matrix[i] + 1) % 2 && matrix[i] != 50) {
+			int boto_ref = (matrix[i] - 1)/2;
 			if (buttons.size() > boto_ref) {
 				//TODO: Dibuixar en front map el pal de la porta de dabant
 				Gate* g = new Gate();
@@ -301,7 +301,7 @@ void SceneB::initEnemies(TileMap *eMap) {
 		for (int i = 0; i < cols; ++i) {
 			if (map[j*cols + i]) {
 				Enemy* enemy = new Enemy();
-				enemy->init(Enemy::Type::EMagenta, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				enemy->init(Enemy::Type::ECyan, glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				glm::vec2 enemyPos(i * tileSizeX, j * tileSizeY);
 				enemy->setPosition(enemyPos);
 				enemy->setPhysicsTileMap(physicsMap);

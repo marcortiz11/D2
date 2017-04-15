@@ -294,8 +294,8 @@ void Scene::initTraps(TileMap* trapsMap) {
 			buttons.push_back(b);
 		}
 		//Index imparells = portes.
-		else if (matrix[i]+1 % 2 && matrix[i] != 50) {
-			int boto_ref = (matrix[i] - 1) - 1;
+		else if (matrix[i] > 0 && (matrix[i]+1) % 2 && matrix[i] != 50) {
+			int boto_ref = (matrix[i] - 1)/2;
 			if (buttons.size() > boto_ref) {
 				//TODO: Dibuixar en front map el pal de la porta de dabant
 				Gate* g = new Gate();

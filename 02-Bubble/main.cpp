@@ -100,6 +100,8 @@ int main(int argc, char **argv){
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(motionCallback);
 
+	//glutFullScreen();
+
 	// GLEW will take care of OpenGL extension functions
 	glewExperimental = GL_TRUE;
 	glewInit();

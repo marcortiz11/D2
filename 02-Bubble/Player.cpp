@@ -22,7 +22,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	alturaBigJump = {0.0f, 0.25f, 0.35f, 0.40f, 0.50f, 0.48f, 0.40f, 0.35f, 0.25f, 0.0f};
 
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(widthAnim, heightAnim), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(29);
+	sprite->setNumberAnimations(40);
 
 	sprite->setAnimationSpeed(FALLING_LEFT, 1);
 	sprite->addKeyframe(FALLING_LEFT, glm::vec2(1 * widthAnim, 1 * heightAnim));
@@ -502,6 +502,8 @@ void Player::estado_Stopped(int deltaTime, vector<Enemy*>& enemies)
 		direction.x = 1;
 		estado = Estado::Turning;
 	}
+
+
 	else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) &&
 		Game::instance().getSpecialKey(GLUT_KEY_UP)) 
 	{
@@ -528,6 +530,8 @@ void Player::estado_Stopped(int deltaTime, vector<Enemy*>& enemies)
 	{
 		for (int i = 0; i <= 160; i += 32) {
 			glm::vec2 test = posPlayer + glm::vec2(i, 0);
+			glm::ivec2 testTile = physicsMap->getTilePos(test);
+
 			if (!physicsMap->collisionMoveLeft(test, colisionBox)) {
 				targetPosPlayer = test;
 			}
